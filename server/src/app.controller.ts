@@ -9,20 +9,9 @@ import { Public } from './decorators/public.decorator';
 export class AppController {
   constructor(
     private readonly appService: AppService,
-    private readonly authService: AuthService
+
   ) { }
 
 
-  @Public()
-  @UseGuards(LocalAuthGuard)
-  @Post('auth/login')
-  async login(@Request() req) {
-    return this.authService.login(req.user)
-  }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
-  }
 }
