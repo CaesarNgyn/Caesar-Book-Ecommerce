@@ -9,6 +9,7 @@ import { MongooseModule } from '@nestjs/mongoose';
     { name: User.name, schema: UserSchema }
   ])],
   controllers: [UsersController],
-  providers: [UsersService]
+  providers: [UsersService],
+  exports: [UsersService]
 })
 export class UsersModule { }

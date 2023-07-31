@@ -30,8 +30,15 @@ export class UsersService {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return 'User not found'
     }
-    const findUserById = await this.userModel.findById(id)
-    return findUserById
+    const user = await this.userModel.findById(id)
+    return user
+  }
+
+  async findOneByUsername(username: string) {
+
+    const user = await this.userModel.findOne({ email: username })
+    // console.log(user)
+    return user
   }
 
   async update(updateUserDto: UpdateUserDto) {
