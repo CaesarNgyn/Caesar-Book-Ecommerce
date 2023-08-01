@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import { CreateUserDto, RegisterUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
@@ -13,6 +13,12 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     const { password, ...rest } = createUserDto
+
+    const isExist = await this.userModel.findOne({ email: createUserDto.email })
+
+    if (isExist) {
+      throw new BadRequestException(`Email ${createUserDto.email} đã tồn tại. Vui lòng đăng ký Email khác.`)
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
@@ -89,4 +95,45 @@ export class UsersService {
     const deleteUserById = await this.userModel.softDelete({ _id: id })
     return deleteUserById
   }
+
+  async register(registerUserDto: RegisterUserDto) {
+    const { password, ...rest } = registerUserDto
+
+    const isExist = await this.userModel.findOne({ email: registerUserDto.email })
+
+    if (isExist) {
+      throw new BadRequestException(`Email ${registerUserDto.email} đã tồn tại. Vui lòng đăng ký Email khác.`)
+    }
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+
+    const createdUser = await this.userModel.create({
+      ...rest,
+      password: hashedPassword,
+      role: "USER"
+    })
+    return createdUser
+  }
+
+
+  setRefreshToken = async (refresh_token: string, _id: string) => {
+    return await this.userModel.findOneAndUpdate({
+      _id
+    },
+      { refreshToken: refresh_token }
+    )
+  }
+
+
+  async findOneByToken(refresh_token: string) {
+
+    const user = (await this.userModel.findOne({ refreshToken: refresh_token }).select('-password'))
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user
+  }
+
+
 }
