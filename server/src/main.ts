@@ -18,6 +18,17 @@ async function bootstrap() {
   //use cookies
   app.use(cookieParser());
 
+  //config cors
+  app.enableCors(
+    {
+      origin: true,
+      methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+      //enables the inclusion of credentials (such as cookies or HTTP authentication) in cross-origin requests.
+      credentials: true,
+      preflightContinue: false
+    }
+  )
+
 
   //Enable JWT guard for all routes
   const reflector = app.get(Reflector)

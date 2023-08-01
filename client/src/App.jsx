@@ -10,6 +10,7 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import BookPage from './pages/book/BookPage';
 import Home from './components/Home/Home';
+import RegisterPage from './pages/register/RegisterPage';
 
 const Layout = () => {
   return (
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
   {
     path: "login",
     element: <LoginPage />,
+  },
+  {
+    path: "register",
+    element: <RegisterPage />,
   },
 ]);
 

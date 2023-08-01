@@ -82,12 +82,15 @@ export class AuthService {
 
   async register(user: RegisterUserDto) {
     const newUser = await this.usersService.register(user)
+    const { _id, fullName, phone, email } = newUser
     return {
-      data: {
-        _id: newUser?.id,
-        createdAt: newUser?.createdAt
-      }
+      _id,
+      email,
+      fullName,
+      phone
     }
+
+
   }
 
   createRefreshToken = (payload) => {

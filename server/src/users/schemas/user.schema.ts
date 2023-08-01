@@ -3,6 +3,7 @@ import { HydratedDocument, SchemaTimestampsConfig } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User> & SchemaTimestampsConfig;
 
+
 @Schema({ timestamps: true })
 export class User {
   @Prop({ required: true })
