@@ -18,9 +18,7 @@ export class AuthService {
 
   async validateUser(username: string, pass: string) {
     const user = await this.usersService.findOneByUsername(username);
-    if (!user) {
-      throw new BadRequestException('User not found!')
-    }
+
 
     if (user) {
       const isValid = await bcrypt.compare(pass, user.password)
@@ -28,13 +26,13 @@ export class AuthService {
         return user
       }
     }
-    return null;
+    throw new UnauthorizedException("Email/Password không hợp lệ");
   }
 
   async login(user: IUser, response: Response) {
-    const { _id, fullName, email, role } = user
+    const { _id, fullName, email, role, phone, avatar } = user
     if (!user) {
-      throw new BadRequestException('User not found!')
+      throw new BadRequestException('User not found')
     }
     const payload = {
       sub: "token login",
@@ -67,10 +65,12 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
       user: {
-        _id,
+        id: _id,
         fullName,
         email,
-        role
+        role,
+        phone,
+        avatar
       }
     };
   }
@@ -84,7 +84,7 @@ export class AuthService {
     const newUser = await this.usersService.register(user)
     const { _id, fullName, phone, email } = newUser
     return {
-      _id,
+      id: _id,
       email,
       fullName,
       phone
@@ -104,7 +104,7 @@ export class AuthService {
   async refresh(refreshTokenCookies: any, response: Response) {
 
     if (!refreshTokenCookies) {
-      throw new UnauthorizedException("No refresh token found.");
+      throw new UnauthorizedException("Không tồn tại refresh token");
     }
 
     try {
@@ -142,7 +142,7 @@ export class AuthService {
 
   async logout(refreshTokenCookies: any, response: Response) {
     if (!refreshTokenCookies) {
-      throw new UnauthorizedException("No refresh token found.");
+      throw new UnauthorizedException("Không tồn tại refresh token");
     }
 
     try {

@@ -7,12 +7,17 @@ import { ResponseMessage } from "src/decorators/message.decorator";
 import { RegisterUserDto } from "src/users/dto/create-user.dto";
 import { User } from "src/decorators/user.decorator";
 import { IUser } from "src/users/users.interface";
+import { InjectModel } from "@nestjs/mongoose";
+import { SoftDeleteModel } from "soft-delete-plugin-mongoose";
+import { UserDocument } from "src/users/schemas/user.schema";
+import { UsersService } from "src/users/users.service";
 
 
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly usersService: UsersService,
   ) { }
 
   @Public()
@@ -35,8 +40,23 @@ export class AuthController {
   @Get('/account')
   @ResponseMessage("Get user information")
   async getInfo(@User() user: IUser) {
+
+    const userAccount = await this.usersService.findOne(user._id)
+
+    if (!userAccount || userAccount === 'User not found') {
+      // Handle the case when the user is not found
+      return { error: 'User not found' };
+    }
+    const { _id, fullName, email, role, phone, avatar } = userAccount
     return {
-      user
+      user: {
+        id: _id,
+        fullName,
+        email,
+        role,
+        phone,
+        avatar
+      }
     }
   }
 
@@ -46,7 +66,7 @@ export class AuthController {
   async refresh(@Request() req,
     @Res({ passthrough: true }) response: Response
   ) {
-    console.log("refresh>>", req.cookies)
+    // console.log("refresh>>", req.cookies)
     return this.authService.refresh(req.cookies['refresh_token'], response)
   }
 

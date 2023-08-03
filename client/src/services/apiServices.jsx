@@ -1,6 +1,6 @@
 import axios from '../utils/axiosCustomize'
 
-const postRegister = (userData) => {
+export const postRegister = (userData) => {
   return axios.post('api/v1/auth/register', {
     fullName: userData.fullName,
     email: userData.email,
@@ -9,4 +9,25 @@ const postRegister = (userData) => {
   })
 }
 
-export { postRegister }
+export const postLogin = (userData) => {
+  return axios.post('api/v1/auth/login', {
+    username: userData.username,
+    password: userData.password,
+  })
+}
+
+export const fetchAccount = () => {
+  return axios.get('api/v1/auth/account')
+}
+
+export const postLogout = () => {
+  return axios.post('api/v1/auth/logout')
+}
+
+export const fetchUserWithPagination = (current, pageSize) => {
+  return axios.get(`api/v1/users?current=${current}&pageSize=${pageSize}`)
+}
+
+
+
+

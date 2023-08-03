@@ -2,13 +2,37 @@ import { Button, Divider, Form, Input, message, notification } from 'antd';
 import { Link, useNavigate } from 'react-router-dom';
 
 import './Login.scss';
+import { useState } from 'react';
+import { postLogin } from '../../services/apiServices';
+import { doLogin } from '../../redux/account/accountSlice';
+import { useSelector, useDispatch } from 'react-redux';
 
 
 const LoginPage = () => {
+  const [isLoading, setIsLoading] = useState(false)
+  const dispatch = useDispatch()
 
+  const navigate = useNavigate()
 
-  const onFinish = async (values) => {
-    console.log(values)
+  const handleLogin = async (values) => {
+    setIsLoading(true)
+    const { username, password } = values
+    const results = await postLogin(values)
+    console.log("results", results)
+    if (results && results.data) {
+      localStorage.setItem('access_token', results.data?.access_token)
+      message.success('Đăng nhập thành công');
+      setIsLoading(false)
+      dispatch(doLogin(results.data.user))
+      navigate('/')
+    } else {
+      notification.error({
+        message: 'Đăng nhập thất bại',
+        description: results.message,
+        duration: 3
+      });
+      setIsLoading(false)
+    }
   };
 
 
@@ -25,14 +49,19 @@ const LoginPage = () => {
             <Form
               name="basic"
               // style={{ maxWidth: 600, margin: '0 auto' }}
-              onFinish={onFinish}
+              onFinish={handleLogin}
               autoComplete="off"
             >
               <Form.Item
                 labelCol={{ span: 24 }} //whole column
                 label="Email"
                 name="username"
-                rules={[{ required: true, message: 'Email không được để trống!' }]}
+                rules={[{ required: true, message: 'Email không được để trống!' },
+                  // {
+                  //   type: 'email',
+                  //   message: 'Email không hợp lệ!',
+                  // },
+                ]}
               >
                 <Input />
               </Form.Item>
@@ -49,11 +78,11 @@ const LoginPage = () => {
               <Form.Item
               // wrapperCol={{ offset: 6, span: 16 }}
               >
-                <Button type="primary" htmlType="submit" loading={true}>
+                <Button type="primary" htmlType="submit" loading={isLoading}>
                   Đăng nhập
                 </Button>
               </Form.Item>
-              <Divider>Or</Divider>
+              <Divider></Divider>
               <p className="text text-normal">Chưa có tài khoản ?
                 <span>
                   <Link to='/register' > Đăng Ký </Link>

@@ -10,11 +10,13 @@ const RegisterPage = () => {
 
   const navigate = useNavigate()
 
+
+
   const handleRegister = async (values) => {
     setIsLoading(true)
     const { email, fullName, password, phone } = values
     const results = await postRegister(values)
-    console.log("result", results.statusCode)
+
     if (results && results.data) {
       message.success('Đăng ký tài khoản thành công');
       setIsLoading(false)
@@ -23,21 +25,13 @@ const RegisterPage = () => {
       notification.error({
         message: 'Đăng ký người dùng thất bại',
         description: results.message,
-        duration: 5
+        duration: 3
       });
       setIsLoading(false)
     }
-
   };
 
 
-  // Custom validator for phone number minimum length of 10 characters
-  const validatePhoneNumber = (_, value) => {
-    if (value && value.length < 10) {
-      return Promise.reject('Số điện thoại phải có độ dài ít nhất là 10');
-    }
-    return Promise.resolve();
-  };
 
   return (
     <>
@@ -70,7 +64,12 @@ const RegisterPage = () => {
                   label="Email"
                   name="email"
                   rules={[{ required: true, message: 'Email không được để trống!' },
-                  { validator: validatePhoneNumber, message: "Hãy nhập đúng định dạng Email" }]}
+                  {
+                    type: 'email',
+                    message: 'Email không hợp lệ!',
+                  },
+
+                  ]}
                 >
                   <Input />
                 </Form.Item>
