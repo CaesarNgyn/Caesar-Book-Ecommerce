@@ -32,8 +32,7 @@ export class UsersService {
     let { sort }: { sort: any } = aqp(queryString)
     delete filter.current
     delete filter.pageSize
-
-
+    // console.log('>>filter', filter)
 
     const offset = (currentPage - 1) * limit
     const defaultLimit = limit ? limit : 3
@@ -42,9 +41,9 @@ export class UsersService {
     const totalPages = Math.ceil(totalItems / defaultLimit);
 
     // using mongoose regular expression
-    // const result = await this.companyModel.find({ name: { $regex: 'vin', $options: 'i' } })
+    // const result = await this.userModel.find({ name: { $regex: 'vin', $options: 'i' } })
 
-    const result = await this.userModel.find({})
+    const result = await this.userModel.find(filter)
       .skip(offset)
       .limit(defaultLimit)
       .sort(sort)
@@ -69,7 +68,7 @@ export class UsersService {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return 'User not found'
     }
-    const user = await this.userModel.findOne({ _id: id })
+    const user = await this.userModel.findOne({ _id: id }).select('-password')
     return user
   }
 
