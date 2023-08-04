@@ -10,7 +10,7 @@ import {
     MenuUnfoldOutlined,
     DownOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, Dropdown, Space, message } from 'antd';
+import { Layout, Menu, Dropdown, Space, message, Avatar } from 'antd';
 import { Outlet, useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
 import './LayoutAdmin.scss';
@@ -20,6 +20,9 @@ import { doLogout } from '../../redux/account/accountSlice';
 
 
 const { Content, Footer, Sider } = Layout;
+
+const baseURL = import.meta.env.VITE_BACKEND_URL
+
 
 const items = [
     {
@@ -81,6 +84,13 @@ const LayoutAdmin = () => {
             key: 'account',
         },
         {
+            label: <Link to='/'
+                style={{ cursor: 'pointer' }}
+
+            >Trang chủ</Link>,
+            key: 'home',
+        },
+        {
             label: <label
                 style={{ cursor: 'pointer' }}
                 onClick={() => handleLogout()}
@@ -89,6 +99,11 @@ const LayoutAdmin = () => {
         },
 
     ];
+
+    const getAvatarFromServer = (imgUrl) => {
+        console.log(">>", `${baseURL}/images/avatar/${imgUrl}`)
+        return `${baseURL}/images/avatar/${imgUrl}`
+    }
 
 
     return (
@@ -122,7 +137,9 @@ const LayoutAdmin = () => {
                     <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
                         <a onClick={(e) => e.preventDefault()}>
                             <Space>
-                                Xin chào,{user?.fullName}
+                                <Avatar size={40}
+                                    src={getAvatarFromServer(user.avatar)} />
+                                {user?.fullName}
                                 <DownOutlined />
                             </Space>
                         </a>

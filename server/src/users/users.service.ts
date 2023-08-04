@@ -109,7 +109,8 @@ export class UsersService {
     const createdUser = await this.userModel.create({
       ...rest,
       password: hashedPassword,
-      role: "USER"
+      role: "USER",
+      avatar: 'user-1691143487595.png'
     })
     return createdUser
   }

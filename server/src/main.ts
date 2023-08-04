@@ -5,9 +5,13 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { JwtAuthGuard } from './auth/guard/jwt-auth.guard';
 import { TransformInterceptor } from './core/transform.interceptor';
 import cookieParser from 'cookie-parser';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(
+    AppModule,
+  );
 
   const configService = app.get(ConfigService)
   const port = configService.get<string>('PORT')
@@ -28,6 +32,13 @@ async function bootstrap() {
       preflightContinue: false
     }
   )
+
+  //access public folder
+  //http://localhost:6969/images/resume/fluffboi.jpg accessing without /public
+  app.useStaticAssets(join(__dirname, '..', 'public'));
+
+
+
 
 
   //Enable JWT guard for all routes

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaReact } from 'react-icons/fa'
 import { FiShoppingCart } from 'react-icons/fi';
 import { VscSearchFuzzy } from 'react-icons/vsc';
-import { Divider, Badge, Drawer, message } from 'antd';
+import { Divider, Badge, Drawer, message, Avatar } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Space } from 'antd';
@@ -10,6 +10,9 @@ import { useNavigate } from 'react-router';
 import './Header.scss';
 import { postLogout } from '../../services/apiServices';
 import { doLogout } from '../../redux/account/accountSlice';
+import { Link } from 'react-router-dom';
+
+const baseURL = import.meta.env.VITE_BACKEND_URL
 
 const Header = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -17,6 +20,7 @@ const Header = () => {
   const user = useSelector(state => state.account.user);
   const navigate = useNavigate();
   const dispatch = useDispatch()
+
 
   const handleLogout = async () => {
     const res = await postLogout();
@@ -27,11 +31,18 @@ const Header = () => {
     }
   }
 
+
+  const getAvatarFromServer = (imgUrl) => {
+    // console.log(">>", `${baseURL}/images/avatar/${imgUrl}`)
+    return `${baseURL}/images/avatar/${imgUrl}`
+  }
+
   const items = [
     {
       label: <label style={{ cursor: 'pointer' }}>Quản lý tài khoản</label>,
       key: 'account',
     },
+
     {
       label: <label
         style={{ cursor: 'pointer' }}
@@ -41,7 +52,17 @@ const Header = () => {
     },
 
   ];
+  if (user.role === 'ADMIN') {
+    items.unshift({
+      label: <Link to='/admin'
+        style={{ cursor: 'pointer' }}
+
+      >Trang quản trị</Link>,
+      key: 'admin',
+    })
+  }
   return (
+
     <>
       <div className='header-container'>
         <header className="page-header">
@@ -78,7 +99,8 @@ const Header = () => {
                   <Dropdown menu={{ items }} trigger={['click']}>
                     <a onClick={(e) => e.preventDefault()}>
                       <Space>
-                        Xin chào, {user?.fullName}
+                        <Avatar size={32}
+                          src={getAvatarFromServer(user.avatar)} /> {user?.fullName}
                         <DownOutlined />
                       </Space>
                     </a>
@@ -97,6 +119,7 @@ const Header = () => {
       >
         <p>Quản lý tài khoản</p>
         <Divider />
+
 
         <p>Đăng xuất</p>
         <Divider />
