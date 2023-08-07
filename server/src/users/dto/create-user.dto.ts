@@ -1,5 +1,5 @@
-import { Transform } from "class-transformer";
-import { IsEmail, IsInt, IsNotEmpty, IsNumber, IsNumberString, IsPhoneNumber, IsString, Length, Min } from "class-validator";
+import { Transform, Type } from "class-transformer";
+import { IsArray, IsEmail, IsInt, IsNotEmpty, IsNumber, IsNumberString, IsPhoneNumber, IsString, Length, Min, ValidateNested } from "class-validator";
 
 export class CreateUserDto {
   @IsEmail({}, { message: 'Email không hợp lệ!' })
@@ -13,13 +13,20 @@ export class CreateUserDto {
   fullName: string;
 
   @IsNotEmpty({ message: 'Phone không được để trống!' })
-  @Min(1000000000, { message: 'Phone phải có tối thiểu 10 chữ số' })
-  @IsNumber({}, { message: 'Phone phải có định dạng số!' })
-  phone: number;
+  @IsString({ message: 'Phone phải có định dạng là chuỗi!' })
+  @Length(10, 20, { message: 'Phone phải có ít nhất 10 chữ số!' })
+  phone: string;
 
   avatar: string;
 
   role: string;
+}
+
+export class CreateUserDtoArray {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateUserDto)
+  users: CreateUserDto[];
 }
 
 export class RegisterUserDto {

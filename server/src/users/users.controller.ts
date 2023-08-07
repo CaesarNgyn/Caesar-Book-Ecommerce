@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, CreateUserDtoArray } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Public } from 'src/decorators/public.decorator';
 import { ResponseMessage } from 'src/decorators/message.decorator';
@@ -9,11 +9,16 @@ import { ResponseMessage } from 'src/decorators/message.decorator';
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
-  @Public()
   @Post()
   @ResponseMessage("Create a new user")
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
+  }
+
+  @Post('bulk-create')
+  @ResponseMessage("Create list users")
+  createBulk(@Body() createUserDtos: CreateUserDtoArray) {
+    return this.usersService.createBulk(createUserDtos);
   }
 
   @Get()

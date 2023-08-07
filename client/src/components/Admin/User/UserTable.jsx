@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Row, Col, Divider, Button, Drawer, Descriptions, Badge } from 'antd';
+import { Table, Row, Col, Divider, Button, Drawer, Descriptions, Badge, Popconfirm, message, notification } from 'antd';
 import InputSearch from './InputSearch';
-import { fetchUserByID, fetchUserWithQuery } from '../../../services/apiServices';
-import { DeleteOutlined, ExportOutlined, ImportOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
+import { deleteUser, fetchUserByID, fetchUserWithQuery } from '../../../services/apiServices';
+import { DeleteOutlined, DeleteTwoTone, EditTwoTone, ExportOutlined, ImportOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import UserViewDetail from './UserViewDetail';
 import moment from 'moment';
+import ModalCreateUser from './ModalCreateUser';
+import ModalUserImport from './ModalUserImport';
+import * as XLSX from 'xlsx';
+import ModalUpdateUser from './ModalUpdateUser';
 
 // https://stackblitz.com/run?file=demo.tsx
 const UserTable = () => {
@@ -18,12 +22,45 @@ const UserTable = () => {
     const [filter, setFilter] = useState('')
     const [openViewDetail, setOpenViewDetail] = useState(false);
     const [dataViewDetail, setDataViewDetail] = useState([])
-
+    const [openModalCreateUser, setOpenModalCreateUser] = useState(false);
+    const [openModalImportUser, setOpenModalImportUser] = useState(false);
+    const [openModalUpdateUser, setOpenModalUpdateUser] = useState(false);
+    const [dataUpdate, setDataUpdate] = useState({})
 
 
     const showViewDetail = () => {
         setOpenViewDetail(true);
     };
+
+
+    const showModalCreateUser = () => {
+        setOpenModalCreateUser(true);
+    };
+
+    const showModalImportUser = () => {
+        setOpenModalImportUser(true);
+    };
+
+    const handleUpdateUser = (user) => {
+        // console.log(">>user update", user)
+        setDataUpdate(user)
+        setOpenModalUpdateUser(true)
+    }
+
+    const handleDeleteUser = async (userID) => {
+        const results = await deleteUser(userID)
+        console.log(">>>resuolts ddeelete", results)
+        if (results && results.data) {
+            message.success('Xóa người dùng thành công');
+            fetchListUser()
+        } else {
+            notification.error({
+                message: 'Xóa người dùng thất bại',
+                description: results.message,
+                duration: 3
+            });
+        }
+    }
 
 
 
@@ -100,17 +137,54 @@ const UserTable = () => {
             sorter: true
         },
         {
+            title: 'Role',
+            dataIndex: 'role',
+            sorter: true
+        },
+        {
             title: 'Số điện thoại',
             dataIndex: 'phone',
             sorter: true
         },
         {
+            title: 'Ngày cập nhật',
+            dataIndex: 'updatedAt',
+            sorter: true
+        },
+        // {
+        //     title: 'Đã xóa',
+        //     dataIndex: 'deleted',
+        //     sorter: true
+        // },
+        {
             title: 'Action',
             render: (text, record, index) => {
                 return (
-                    <> <span>
-                        <DeleteOutlined style={{ color: 'red' }} onClick={() => handleDelete(record.id)} />
-                    </span></>
+                    <>
+                        <Popconfirm
+                            title="Xóa người dùng"
+                            description="Bạn có chắc muốn xóa người dùng này?"
+                            onConfirm={() => handleDeleteUser(record.id)}
+                            // onCancel={cancel}
+                            placement="left"
+                            okText="Có"
+                            cancelText="Hủy"
+                        >
+                            <span>
+                                <DeleteOutlined
+                                    style={{ color: 'red', cursor: 'pointer' }}
+                                />
+                            </span>
+                        </Popconfirm >
+
+
+
+                        <span style={{ marginLeft: '16px' }}>
+                            <EditTwoTone
+                                twoToneColor={'#f57800'}
+                                onClick={() => handleUpdateUser(record)} />
+                        </span>
+                    </>
                 )
             }
         },
@@ -132,19 +206,25 @@ const UserTable = () => {
         const res = await fetchUserWithQuery(query)
         // console.log(">>check pagination and fiklter", pagination)
         // console.log(">>res", res.data)
-        // console.log(">>res resuklts", res.data.result)
+        console.log(">>res resuklts", res.data.result)
+
         if (res && res.data) {
             const listUser = res.data.result.map((user, index) => ({
                 key: index,
                 id: user._id,
                 fullName: user.fullName,
                 email: user.email,
+                role: user.role,
                 phone: user.phone,
+                deleted: user.isDeleted ? 'true' : 'false',
+                updatedAt: moment(user.updatedAt).format('DD-MM-YY HH:mm:ss'),
             })
             )
 
             setTotal(res.data.meta.total)
             setListUser(listUser)
+            console.log("Check list user", listUser)
+
             // console.log(">>data", data)
         }
         setIsLoading(false)
@@ -174,6 +254,18 @@ const UserTable = () => {
 
     };
 
+    const handleExportUserData = () => {
+        if (listUser.length > 0) {
+            const worksheet = XLSX.utils.json_to_sheet(listUser);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+            //let buffer = XLSX.write(workbook, { bookType: "xlsx", type: "buffer" });
+            //XLSX.write(workbook, { bookType: "xlsx", type: "binary" });
+            XLSX.writeFile(workbook, "UserDataExport.xlsx");
+        }
+
+    }
+
 
 
     const RenderHeader = () => {
@@ -184,17 +276,22 @@ const UserTable = () => {
                     <span style={{ display: 'flex', gap: 15 }}>
                         <Button
                             icon={<ExportOutlined />}
-                            type='primary'>
+                            type='primary'
+                            onClick={() => handleExportUserData()}
+                        >
                             Export
                         </Button>
                         <Button
                             icon={<ImportOutlined />}
-                            type='primary'>
+                            type='primary'
+                            onClick={showModalImportUser}>
+
                             Import
                         </Button>
                         <Button
                             icon={<PlusOutlined />}
-                            type='primary'>
+                            type='primary'
+                            onClick={showModalCreateUser}>
                             Thêm mới
                         </Button>
 
@@ -251,6 +348,24 @@ const UserTable = () => {
                 dataViewDetail={dataViewDetail}
                 setDataViewDetail={setDataViewDetail}
             />
+            <ModalCreateUser
+                openModalCreateUser={openModalCreateUser}
+                setOpenModalCreateUser={setOpenModalCreateUser}
+                fetchListUser={fetchListUser}
+            />
+            <ModalUserImport
+                openModalImportUser={openModalImportUser}
+                setOpenModalImportUser={setOpenModalImportUser}
+                fetchListUser={fetchListUser}
+                listUser={listUser}
+            />
+            <ModalUpdateUser
+                openModalUpdateUser={openModalUpdateUser}
+                setOpenModalUpdateUser={setOpenModalUpdateUser}
+                dataUpdate={dataUpdate}
+                fetchListUser={fetchListUser}
+            />
+
         </>
     )
 }

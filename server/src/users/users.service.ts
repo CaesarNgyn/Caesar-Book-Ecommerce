@@ -1,5 +1,5 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
-import { CreateUserDto, RegisterUserDto } from './dto/create-user.dto';
+import { CreateUserDto, CreateUserDtoArray, RegisterUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from './schemas/user.schema';
@@ -7,6 +7,7 @@ import mongoose, { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import aqp from 'api-query-params';
+import { validate } from 'class-validator';
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: SoftDeleteModel<UserDocument>) { }
@@ -22,10 +23,56 @@ export class UsersService {
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    const createdUser = await this.userModel.create({ ...rest, password: hashedPassword })
+    const createdUser = await this.userModel.create(
+      {
+        ...rest,
+        password: hashedPassword,
+        role: "USER",
+        avatar: 'user-1691143487595.png'
+      })
 
-    return createdUser;
+    return {
+      id: createdUser._id,
+      email: createdUser.email,
+      fullName: createdUser.fullName,
+      phone: createdUser.phone
+    }
+    // return createdUser
   }
+
+
+
+  async createBulk(createUserDtos: CreateUserDtoArray) {
+    let usersToCreate = []
+    for (const userDto of createUserDtos.users) {
+      const { password, email, ...rest } = userDto;
+
+      const isExist = await this.userModel.findOne({ email });
+
+      if (isExist) {
+        throw new BadRequestException(`Email ${email} đã tồn tại. Vui lòng đăng ký Email khác.`);
+      }
+
+      usersToCreate.push({
+        ...rest,
+        email,
+        password: bcrypt.hashSync(password, 10),
+        role: "USER",
+        avatar: 'user-1691143487595.png'
+      });
+    }
+
+    try {
+      const createdUsers = await this.userModel.insertMany(usersToCreate);
+      return {
+        createdUsers
+      };
+    } catch (error) {
+      throw new Error(`Error creating users: ${error.message}`);
+    }
+  }
+
+
 
   async findAll(limit: number, currentPage: number, queryString: string) {
     const { filter, population } = aqp(queryString)
@@ -90,7 +137,13 @@ export class UsersService {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return 'User not found'
     }
-    const user = await this.userModel.findOne({ _id: id })
+    const foundUser = await this.userModel.findById({ _id: id })
+    if (foundUser.email === "admin@gmail.com") {
+      throw new BadRequestException("Không thể xóa tài khoản người quản trị Admin")
+    }
+    if (foundUser.email === "ngulongkhanh@gmail.com" || foundUser.email === "caesar@gmail.com") {
+      throw new BadRequestException("Không có gì xóa được Khánh Nguyễn đâu!")
+    }
     const deleteUserById = await this.userModel.softDelete({ _id: id })
     return deleteUserById
   }
