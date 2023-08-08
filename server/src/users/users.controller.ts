@@ -39,7 +39,6 @@ export class UsersController {
 
   @Patch()
   @ResponseMessage("Update a user")
-
   update(@Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(updateUserDto);
   }
