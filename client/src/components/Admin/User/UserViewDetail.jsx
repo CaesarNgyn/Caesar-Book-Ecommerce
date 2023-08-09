@@ -22,7 +22,7 @@ const UserViewDetail = (props) => {
               {item.children}
             </Descriptions.Item>
           ))}
-        </Descriptions>;
+        </Descriptions>
       </Drawer>
     </>
   )

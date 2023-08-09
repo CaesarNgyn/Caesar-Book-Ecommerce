@@ -21,6 +21,7 @@ import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import LayoutAdmin from './components/Admin/LayoutAdmin';
 import './styles/Reset.scss';
 import UserTable from './components/Admin/User/UserTable';
+import BookTable from './components/Admin/Book/BookTable';
 
 
 const Layout = () => {
@@ -61,7 +62,7 @@ const router = createBrowserRouter([
       },
       {
         path: "book",
-        element: <BookPage />,
+        element: <BookTable />,
       },
       {
         path: "user",

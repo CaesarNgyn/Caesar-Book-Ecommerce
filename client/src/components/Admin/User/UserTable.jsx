@@ -108,9 +108,9 @@ const UserTable = () => {
                 {
                     key: '7',
                     label: 'Updated At',
-                    children: moment(user.updatedAt).format('DD-MM-YY HH:mm:ss'),
+                    children: moment(user.updatedAt).format('DD-MM-YY HH:mm:ss')
 
-                },
+                }
             ])
         }
 
@@ -202,6 +202,8 @@ const UserTable = () => {
             query += `&sort=${sorterField}`
         } else if (sorterFilter && sorterFilter === 'descend') {
             query += `&sort=-${sorterField}`
+        } else {
+            query += `&sort=role`
         }
         const res = await fetchUserWithQuery(query)
         // console.log(">>check pagination and fiklter", pagination)

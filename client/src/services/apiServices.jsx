@@ -71,7 +71,12 @@ export const deleteUser = (userId) => {
   return axios.delete(`api/v1/users/${userId}`)
 }
 
+export const fetchBookWithQuery = (query) => {
+  return axios.get(`api/v1/books?${query}`)
+}
 
-
+export const fetchBookByID = (id) => {
+  return axios.get(`api/v1/books/${id}`)
+}
 
 

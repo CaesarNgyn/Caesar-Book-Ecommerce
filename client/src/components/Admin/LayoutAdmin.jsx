@@ -101,7 +101,7 @@ const LayoutAdmin = () => {
     ];
 
     const getAvatarFromServer = (imgUrl) => {
-        console.log(">>", `${baseURL}/images/avatar/${imgUrl}`)
+        // console.log(">>", `${baseURL}/images/avatar/${imgUrl}`)
         return `${baseURL}/images/avatar/${imgUrl}`
     }
 
