@@ -80,3 +80,55 @@ export const fetchBookByID = (id) => {
 }
 
 
+export const getCategory = () => {
+  return axios.get(`api/v1/database/category`)
+}
+
+export const postUploadBookImg = (fileImg) => {
+  const bodyFormData = new FormData();
+  bodyFormData.append('fileImgUpload', fileImg);
+  return axios({
+    method: 'post',
+    url: '/api/v1/file/upload',
+    data: bodyFormData,
+    headers: {
+      "Content-Type": "multipart/form-data",
+      "folder_type": "book"
+    },
+  });
+
+}
+
+export const postCreateBook = (author, mainText, price, quantity, sold, category, thumbnail, slider) => {
+  console.log(">>slider api", slider)
+  console.log(">>thumb api", thumbnail)
+
+  return axios.post('api/v1/books', {
+    mainText,
+    author,
+    price,
+    sold,
+    quantity,
+    category,
+    thumbnail,
+    slider
+  })
+}
+
+export const patchUpdateBook = (id, thumbnail, slider, mainText, author, price, sold, quantity, category) => {
+  return axios.patch(`api/v1/books`, {
+    _id: id,
+    thumbnail: thumbnail,
+    slider: slider,
+    mainText: mainText,
+    author: author,
+    price: price,
+    sold: sold,
+    quantity: quantity,
+    category: category
+  })
+}
+
+export const deleteBook = (bookId) => {
+  return axios.delete(`api/v1/books/${bookId}`)
+}

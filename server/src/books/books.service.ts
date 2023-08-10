@@ -41,7 +41,7 @@ export class BooksService {
       .populate(population)
       .sort(sort)
 
-    console.log(">> query", result)
+    // console.log(">> query", result)
     return {
       meta: {
         current: currentPage, //trang hiện tại

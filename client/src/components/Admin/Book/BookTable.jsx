@@ -6,8 +6,10 @@ import moment from 'moment';
 
 import * as XLSX from 'xlsx';
 import InputSearch from './InputSearch';
-import { fetchBookByID, fetchBookWithQuery } from '../../../services/apiServices';
+import { deleteBook, fetchBookByID, fetchBookWithQuery } from '../../../services/apiServices';
 import BookViewDetail from './BookViewDetail';
+import ModalCreateBook from './ModalCreateBook';
+import ModalUpdateBook from './ModalUpdateBook';
 
 
 // https://stackblitz.com/run?file=demo.tsx
@@ -41,21 +43,25 @@ const BookTable = () => {
     setOpenModalImportBook(true);
   };
 
-  const handleUpdateBook = (book) => {
-    // console.log(">>book update", book)
-    setDataUpdate(book)
+  const handleUpdateBook = async (bookId) => {
+    const res = await fetchBookByID(bookId)
+    // console.log("res", res)
+
+    if (res && res.data) {
+      setDataUpdate(res.data)
+    }
+
     setOpenModalUpdateBook(true)
   }
 
   const handleDeleteBook = async (bookID) => {
     const results = await deleteBook(bookID)
-    console.log(">>>resuolts ddeelete", results)
     if (results && results.data) {
-      message.success('Xóa người dùng thành công');
+      message.success('Xóa sách thành công');
       fetchListBook()
     } else {
       notification.error({
-        message: 'Xóa người dùng thất bại',
+        message: 'Xóa sách thất bại',
         description: results.message,
         duration: 3
       });
@@ -98,23 +104,33 @@ const BookTable = () => {
         },
         {
           key: '5',
+          label: 'Số lượng',
+          children: book.quantity,
+        },
+        {
+          key: '6',
+          label: 'Đã bán',
+          children: book.sold,
+        },
+        {
+          key: '7',
           label: 'Thể loại',
           children: <Badge status="processing" text={`${book.category}`} />,
           span: 2
         },
         {
-          key: '6',
+          key: '8',
           label: 'Created At',
           children: moment(book.createdAt).format('DD-MM-YY HH:mm:ss'),
 
         },
         {
-          key: '7',
+          key: '9',
           label: 'Updated At',
           children: moment(book.updatedAt).format('DD-MM-YY HH:mm:ss'),
         },
-        { key: '8', thumbnail: book.thumbnail },
-        { key: '9', slider: book.slider },
+        { key: '10', thumbnail: book.thumbnail },
+        { key: '11', slider: book.slider },
       ])
     }
 
@@ -138,7 +154,8 @@ const BookTable = () => {
     {
       title: 'Thể loại',
       dataIndex: 'category',
-      sorter: true
+      sorter: true,
+      width: "120px"
     },
     {
       title: 'Tác giả',
@@ -158,9 +175,9 @@ const BookTable = () => {
       width: "150px"
     },
     // {
-    //     title: 'Đã xóa',
-    //     dataIndex: 'deleted',
-    //     sorter: true
+    //   title: 'Đã xóa',
+    //   dataIndex: 'deleted',
+    //   sorter: true
     // },
     {
       title: 'Action',
@@ -169,8 +186,8 @@ const BookTable = () => {
         return (
           <>
             <Popconfirm
-              title="Xóa người dùng"
-              description="Bạn có chắc muốn xóa người dùng này?"
+              title="Xóa sách"
+              description="Bạn có chắc muốn xóa sách này?"
               onConfirm={() => handleDeleteBook(record.id)}
               // onCancel={cancel}
               placement="left"
@@ -183,13 +200,10 @@ const BookTable = () => {
                 />
               </span>
             </Popconfirm >
-
-
-
             <span style={{ marginLeft: '16px' }}>
               <EditTwoTone
                 twoToneColor={'#f57800'}
-                onClick={() => handleUpdateBook(record)} />
+                onClick={() => handleUpdateBook(record.id)} />
             </span>
           </>
         )
@@ -210,7 +224,7 @@ const BookTable = () => {
     } else if (sorterFilter && sorterFilter === 'descend') {
       query += `&sort=-${sorterField}`
     } else {
-      query += `&sort=updatedAt`
+      query += `&sort=-updatedAt`
     }
     const res = await fetchBookWithQuery(query)
     // console.log(">>check pagination and fiklter", pagination)
@@ -360,23 +374,18 @@ const BookTable = () => {
         dataViewDetail={dataViewDetail}
         setDataViewDetail={setDataViewDetail}
       />
-      {/* <ModalCreateBook
+      <ModalCreateBook
         openModalCreateBook={openModalCreateBook}
         setOpenModalCreateBook={setOpenModalCreateBook}
         fetchListBook={fetchListBook}
-      />
-      <ModalBookImport
-        openModalImportBook={openModalImportBook}
-        setOpenModalImportBook={setOpenModalImportBook}
-        fetchListBook={fetchListBook}
-        listBook={listBook}
       />
       <ModalUpdateBook
         openModalUpdateBook={openModalUpdateBook}
         setOpenModalUpdateBook={setOpenModalUpdateBook}
         dataUpdate={dataUpdate}
+        setDataUpdate={setDataUpdate}
         fetchListBook={fetchListBook}
-      /> */}
+      />
 
     </>
   )

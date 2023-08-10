@@ -42,16 +42,16 @@ const BookViewDetail = (props) => {
     if (dataViewDetail) {
       let imgThumbnail = {}
       let imgSlider = []
-      if (dataViewDetail[7]?.thumbnail) {
+      if (dataViewDetail[9]?.thumbnail) {
         imgThumbnail = {
           uid: uuidv4(),
-          name: dataViewDetail[7]?.thumbnail,
+          name: dataViewDetail[9]?.thumbnail,
           status: 'done',
-          url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${dataViewDetail[7]?.thumbnail}`
+          url: `${import.meta.env.VITE_BACKEND_URL}/images/book/${dataViewDetail[9]?.thumbnail}`
         }
       }
-      if (dataViewDetail[8]?.slider && dataViewDetail[8]?.slider.length > 0) {
-        dataViewDetail[8]?.slider.map((item) => {
+      if (dataViewDetail[10]?.slider && dataViewDetail[10]?.slider.length > 0) {
+        dataViewDetail[10]?.slider.map((item) => {
           imgSlider.push({
             uid: uuidv4(),
             name: item,
@@ -68,10 +68,7 @@ const BookViewDetail = (props) => {
     props.setOpenViewDetail(false)
   }
 
-  const getAvatarFromServer = (imgUrl) => {
-    // console.log(">>", `${baseURL}/images/book/${imgUrl}`)
-    return `${baseURL}/images/book/${imgUrl}`
-  }
+
 
 
 
