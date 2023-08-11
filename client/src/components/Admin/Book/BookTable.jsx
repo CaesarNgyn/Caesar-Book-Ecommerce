@@ -238,12 +238,15 @@ const BookTable = () => {
         mainText: book.mainText,
         category: book.category,
         author: book.author,
+        sold: book.sold,
+        quantity: book.quantity,
         price: new Intl.NumberFormat('vi-VN', {
           style: 'currency',
           currency: 'VND',
         }).format(book.price),
         deleted: book.isDeleted ? 'true' : 'false',
         updatedAt: moment(book.updatedAt).format('DD-MM-YY HH:mm:ss'),
+        updatedAt: moment(book.createdAt).format('DD-MM-YY HH:mm:ss'),
       })
       )
 
@@ -306,13 +309,6 @@ const BookTable = () => {
               onClick={() => handleExportBookData()}
             >
               Export
-            </Button>
-            <Button
-              icon={<ImportOutlined />}
-              type='primary'
-              onClick={showModalImportBook}>
-
-              Import
             </Button>
             <Button
               icon={<PlusOutlined />}

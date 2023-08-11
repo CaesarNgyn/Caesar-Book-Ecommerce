@@ -313,7 +313,7 @@ const BookModalCreate = (props) => {
           </Row>
         </Form>
       </Modal>
-      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={() => setPreviewOpen(false)}>
+      <Modal width={"40vw"} open={previewOpen} title={previewTitle} footer={null} onCancel={() => setPreviewOpen(false)}>
         <img alt="example" style={{ width: '100%' }} src={previewImage} />
       </Modal>
     </>

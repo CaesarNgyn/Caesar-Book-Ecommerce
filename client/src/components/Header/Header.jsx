@@ -77,7 +77,7 @@ const Header = () => {
               </span>
               <input
                 className="input-search" type={'text'}
-                placeholder="Tìm ngay cuốn sách ưa thích (VD: Hoàng tử bé)"
+                placeholder="Tìm ngay cuốn sách ưa thích (VD: Tinh hoa kinh tế học)"
               />
             </div>
           </div>

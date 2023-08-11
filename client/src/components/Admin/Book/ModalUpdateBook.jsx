@@ -356,7 +356,12 @@ const ModalUpdateBook = (props) => {
         </Form>
 
       </Modal>
-      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={() => setPreviewOpen(false)}>
+      <Modal
+        open={previewOpen}
+        title={previewTitle}
+        width={"40vw"}
+        footer={null}
+        onCancel={() => setPreviewOpen(false)}>
         <img alt="example" style={{ width: '100%' }} src={previewImage} />
       </Modal>
     </>
