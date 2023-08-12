@@ -30,6 +30,9 @@ const Header = () => {
       navigate('/')
     }
   }
+  const handleNavigateHome = () => {
+    navigate('/')
+  }
 
 
   const getAvatarFromServer = (imgUrl) => {
@@ -71,8 +74,12 @@ const Header = () => {
               setOpenDrawer(true)
             }}>☰</div>
             <div className='page-header__logo'>
-              <span className='logo'>
-                <FaReact className='rotate icon-react' /> Caesar's Books
+              <span className='logo'
+                onClick={handleNavigateHome}
+                style={{ fontSize: '18px' }}
+              >
+                <FaReact className='rotate icon-react'
+                /> Caesar's Books
                 <VscSearchFuzzy className='icon-search' />
               </span>
               <input

@@ -44,7 +44,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       {
-        path: "book",
+        path: "book/:slug",
         element: <BookPage />,
       },
     ],
@@ -90,8 +90,9 @@ export default function App() {
   const getAccountInformation = async () => {
     try {
       if (window.location.pathname === '/login' ||
-        window.location.pathname === '/register'
-
+        window.location.pathname === '/register' ||
+        window.location.pathname === '/'
+        || window.location.pathname.startsWith('/book/')
       ) {
         return;
       }
@@ -114,7 +115,11 @@ export default function App() {
 
   return (
     <>
-      {isLoading === false || window.location.pathname === '/login' || window.location.pathname === '/register' || window.location.pathname === '/' ?
+      {isLoading === false || window.location.pathname === '/login'
+        || window.location.pathname === '/register'
+        || window.location.pathname === '/'
+        || window.location.pathname.startsWith('/book/')
+        ?
         <RouterProvider router={router} />
         :
         <Loading />}

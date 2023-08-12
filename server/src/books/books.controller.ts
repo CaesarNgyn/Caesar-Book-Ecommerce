@@ -3,6 +3,7 @@ import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { ResponseMessage } from 'src/decorators/message.decorator';
+import { Public } from 'src/decorators/public.decorator';
 
 @Controller('books')
 export class BooksController {
@@ -15,7 +16,7 @@ export class BooksController {
   }
 
 
-
+  @Public()
   @Get()
   @ResponseMessage("Fetch list books with pagination")
   findAll(
@@ -27,6 +28,7 @@ export class BooksController {
   }
 
 
+  @Public()
   @Get(':id')
   @ResponseMessage("Fetch book by ID")
   findOne(@Param('id') id: string) {
