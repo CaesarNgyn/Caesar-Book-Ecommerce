@@ -18,7 +18,13 @@ export class BooksService {
         ...rest,
       })
     return createdBook
+  }
 
+  async fetchIdOfAllBooks() {
+
+    const allBooksID = await this.bookModel.find().select('_id')
+
+    return allBooksID.map(book => book._id.toString())
   }
 
   async findAll(limit: number, currentPage: number, queryString: string) {

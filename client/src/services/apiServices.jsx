@@ -132,3 +132,7 @@ export const patchUpdateBook = (id, thumbnail, slider, mainText, author, price, 
 export const deleteBook = (bookId) => {
   return axios.delete(`api/v1/books/${bookId}`)
 }
+
+export const postCreateOrder = (orderData) => {
+  return axios.post('api/v1/orders', { ...orderData })
+}
