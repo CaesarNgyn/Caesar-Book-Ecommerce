@@ -1,10 +1,31 @@
-import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '../redux/counter/counterSlice';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import accountReducer from '../redux/account/accountSlice';
+import orderReducer from '../redux/order/orderSlice';
 
-export const store = configureStore({
-  reducer: {
-    counter: counterReducer,
-    account: accountReducer
-  },
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
+
+const persistConfig = {
+  key: 'root',
+  version: 1,
+  storage,
+  blacklist: ['account'] //account reducer wont be persisted
+}
+const rootReducer = combineReducers({ account: accountReducer, order: orderReducer })
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+const store = configureStore({
+  reducer: persistedReducer,
 });
+const persistor = persistStore(store);
+export { store, persistor };

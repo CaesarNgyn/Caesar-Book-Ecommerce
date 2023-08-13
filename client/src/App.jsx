@@ -17,12 +17,13 @@ import { doGetAccount, doLogin } from './redux/account/accountSlice';
 import Loading from './components/Loading/Loading';
 import NotFound from './components/Not Found/NotFound';
 import AdminPage from './pages/admin/AdminPage';
+import OrderPage from './pages/order/OrderPage';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import LayoutAdmin from './components/Admin/LayoutAdmin';
 import './styles/Reset.scss';
 import UserTable from './components/Admin/User/UserTable';
 import BookTable from './components/Admin/Book/BookTable';
-
+import './styles/cart.scss'
 
 const Layout = () => {
   return (
@@ -46,6 +47,10 @@ const router = createBrowserRouter([
       {
         path: "book/:slug",
         element: <BookPage />,
+      },
+      {
+        path: "order",
+        element: <OrderPage />,
       },
     ],
   },

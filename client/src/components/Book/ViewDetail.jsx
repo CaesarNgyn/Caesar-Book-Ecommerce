@@ -1,4 +1,4 @@
-import { Row, Col, Rate, Divider, Button } from 'antd';
+import { Row, Col, Rate, Divider, Button, notification, message } from 'antd';
 import './Book.scss';
 import ImageGallery from 'react-image-gallery';
 import { useEffect, useRef, useState } from 'react';
@@ -7,6 +7,8 @@ import { BsCartPlus } from 'react-icons/bs';
 import GalleryModal from './GalleryModal'
 import Loader from './Loader';
 import { fetchBookByID } from '../../services/apiServices';
+import { doAddBook } from '../../redux/order/orderSlice';
+import { useDispatch } from 'react-redux';
 const ViewDetail = (props) => {
   const { bookID } = props
   const [isOpenModalGallery, setIsOpenModalGallery] = useState(false);
@@ -15,11 +17,13 @@ const ViewDetail = (props) => {
   const [bookData, setBookData] = useState({})
   const refGallery = useRef(null);
   const [bookImages, setBookImages] = useState([])
+  const [currentQuantity, setCurrentQuantity] = useState(1)
 
+  const dispatch = useDispatch()
   const fetchBook = async () => {
     setIsLoading(true)
     const res = await fetchBookByID(bookID)
-    console.log("check res", res)
+    // console.log("check res", res)
     if (res && res.data) {
       setBookData(res.data)
       const images = []
@@ -37,13 +41,22 @@ const ViewDetail = (props) => {
           thumbnailClass: "thumbnail-image"
         })
       })
-      console.log("img final", images)
+      // console.log("img final", images)
       setBookImages(images)
     }
     setIsLoading(false)
   }
 
-
+  const handleChangeButtonQuantity = (type) => {
+    if (type === 'DECREASE') {
+      if (currentQuantity < 2) return;
+      setCurrentQuantity(+currentQuantity - 1)
+    }
+    if (type === 'INCREASE') {
+      if (currentQuantity === bookData.quantity) return;
+      setCurrentQuantity(+currentQuantity + 1)
+    }
+  }
 
   const handleOnClickImage = () => {
     //get current index onClick
@@ -53,9 +66,23 @@ const ViewDetail = (props) => {
     // refGallery?.current?.fullScreen()
   }
 
-  const onChange = (value) => {
-    console.log('changed', value);
+  const handleChangeInputQuantity = (value) => {
+    if (!isNaN(value)) {
+      if (value <= 0) {
+        setCurrentQuantity(1)
+      } else if (value > bookData.quantity) {
+        setCurrentQuantity(bookData.quantity)
+      } else {
+        setCurrentQuantity(value)
+      }
+    }
   };
+
+  const handleAddToCart = () => {
+    message.success('Thêm sản phẩm vào giỏ hàng!');
+    dispatch(doAddBook({ quantity: currentQuantity, _id: bookData._id, detail: bookData }))
+  }
+
 
   useEffect(() => {
     fetchBook()
@@ -113,13 +140,20 @@ const ViewDetail = (props) => {
                 <div className='quantity'>
                   <span className='left-side'>Số lượng</span>
                   <span className='right-side'>
-                    <button ><MinusOutlined /></button>
-                    <input defaultValue={1} />
-                    <button><PlusOutlined /></button>
+                    <button onClick={() => handleChangeButtonQuantity("DECREASE")}><MinusOutlined /></button>
+                    <input
+                      value={currentQuantity}
+                      onChange={(event) => handleChangeInputQuantity(event.target.value)}
+                    />
+                    <button onClick={() => handleChangeButtonQuantity("INCREASE")}><PlusOutlined /></button>
+                    <span className='left-side' style={{ marginLeft: '12px', padding: '5px 0' }}>{bookData.quantity} có sẵn</span>
                   </span>
                 </div>
                 <div className='buy'>
-                  <button className='cart'>
+                  <button
+                    className='cart'
+                    onClick={() => handleAddToCart()}
+                  >
                     <BsCartPlus className='icon-cart' />
                     <span>Thêm vào giỏ hàng</span>
                   </button>
