@@ -21,9 +21,10 @@ const ModalUpdateUser = (props) => {
   }
 
   const handleSubmit = async (values) => {
+    const { id, fullName, email, phone } = values
     setIsSubmit(true)
     // console.log(values)
-    const results = await patchUpdateUser(values)
+    const results = await patchUpdateUser(id, fullName, email, phone)
     if (results && results.data) {
       message.success('Cập nhật người dùng thành công');
       handleCancel()

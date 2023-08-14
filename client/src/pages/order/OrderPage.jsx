@@ -3,8 +3,10 @@ import ViewOrder from "../../components/Order/ViewOrder";
 import { Button, Result, Steps } from "antd";
 import './Order.scss'
 import Payment from "../../components/Order/Payment";
+import { useNavigate } from "react-router-dom";
 const OrderPage = (props) => {
   const [currentStep, setCurrentStep] = useState(0)
+  const navigate = useNavigate()
   return (
     <>
       <div style={{ background: '#efefef', padding: "20px 0" }}>
@@ -35,7 +37,8 @@ const OrderPage = (props) => {
                 title="Đơn hàng đã được đặt thành công!"
                 subTitle="Cảm ơn quý khách hàng đã tin tưởng Caesar's Books. Chúc quý khách hàng luôn an khang thịnh vượng!"
                 extra={[
-                  <Button type="primary" key="console">
+                  <Button type="primary" key="console"
+                    onClick={() => navigate('/history')}>
                     Xem lịch sử đặt hàng
                   </Button>,
                   ,

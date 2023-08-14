@@ -11,6 +11,7 @@ import './Header.scss';
 import { postLogout } from '../../services/apiServices';
 import { doLogout } from '../../redux/account/accountSlice';
 import { Link } from 'react-router-dom';
+import ManageAccount from '../User/ManageAccount';
 
 const baseURL = import.meta.env.VITE_BACKEND_URL
 
@@ -20,6 +21,7 @@ const Header = () => {
   const user = useSelector(state => state.account.user);
   const navigate = useNavigate();
   const dispatch = useDispatch()
+  const [openModalManageAccount, setOpenModalManageAccount] = useState(false)
 
   const carts = useSelector(state => state.order.carts)
 
@@ -35,6 +37,10 @@ const Header = () => {
     navigate('/')
   }
 
+  const handleOpenManageAccount = () => {
+    setOpenModalManageAccount(true)
+  }
+
 
   const getAvatarFromServer = (imgUrl) => {
     // console.log(">>", `${baseURL}/images/avatar/${imgUrl}`)
@@ -43,7 +49,11 @@ const Header = () => {
 
   const items = [
     {
-      label: <label style={{ cursor: 'pointer' }}>Quản lý tài khoản</label>,
+      label: <label
+        style={{ cursor: 'pointer' }}
+        onClick={() => handleOpenManageAccount()}>
+        Quản lý tài khoản
+      </label>,
       key: 'account',
     },
 
@@ -165,6 +175,11 @@ const Header = () => {
         <p>Đăng xuất</p>
         <Divider />
       </Drawer>
+      <ManageAccount
+        openModalManageAccount={openModalManageAccount}
+        setOpenModalManageAccount={setOpenModalManageAccount}
+        user={user}
+      />
     </>
   )
 };

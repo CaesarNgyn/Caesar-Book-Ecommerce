@@ -57,13 +57,13 @@ export const postCreateManyUser = (userData) => {
 }
 
 
-export const patchUpdateUser = (userData) => {
+export const patchUpdateUser = (id, fullName, email, phone, avatar) => {
   return axios.patch(`api/v1/users`, {
-    _id: userData.id,
-    fullName: userData.fullName,
-    email: userData.email,
-    password: userData.password,
-    phone: userData.phone,
+    _id: id,
+    fullName: fullName,
+    email: email,
+    phone: phone,
+    avatar: avatar
   })
 }
 
@@ -139,4 +139,19 @@ export const postCreateOrder = (orderData) => {
 
 export const getOrdersHistory = () => {
   return axios.get('api/v1/orders/history')
+}
+
+export const postUploadAvatar = (fileImg) => {
+  const bodyFormData = new FormData();
+  bodyFormData.append('fileImgUpload', fileImg);
+  return axios({
+    method: 'post',
+    url: '/api/v1/file/upload',
+    data: bodyFormData,
+    headers: {
+      "Content-Type": "multipart/form-data",
+      "folder_type": "avatar"
+    },
+  });
+
 }

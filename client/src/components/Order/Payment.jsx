@@ -125,7 +125,6 @@ const Payment = (props) => {
               <Form
                 name="basic"
                 // style={{ maxWidth: 600, margin: '0 auto' }}
-
                 autoComplete="off"
                 form={form}
                 onFinish={handleSubmit}
