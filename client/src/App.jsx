@@ -24,6 +24,7 @@ import './styles/Reset.scss';
 import UserTable from './components/Admin/User/UserTable';
 import BookTable from './components/Admin/Book/BookTable';
 import './styles/cart.scss'
+import HistoryPage from './pages/history/HistoryPage';
 
 const Layout = () => {
   return (
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
       {
         path: "order",
         element: <OrderPage />,
+      },
+      {
+        path: "history",
+        element: <HistoryPage />,
       },
     ],
   },

@@ -20,6 +20,9 @@ export class OrderDetail {
 @Schema({ timestamps: true })
 export class Order extends Document {
   @Prop()
+  email: string
+
+  @Prop()
   name: string
 
   @Prop()

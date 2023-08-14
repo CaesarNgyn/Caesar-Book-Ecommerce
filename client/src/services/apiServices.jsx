@@ -136,3 +136,7 @@ export const deleteBook = (bookId) => {
 export const postCreateOrder = (orderData) => {
   return axios.post('api/v1/orders', { ...orderData })
 }
+
+export const getOrdersHistory = () => {
+  return axios.get('api/v1/orders/history')
+}

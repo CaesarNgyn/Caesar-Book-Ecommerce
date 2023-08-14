@@ -20,6 +20,7 @@
     "react-dom": "^18.2.0",
     "react-icons": "4.8.0",
     "react-image-gallery": "1.2.11",
+    "react-json-view": "^1.21.3",
     "react-redux": "8.0.5",
     "react-router-dom": "6.9.0",
     "react-spinners": "0.13.8",

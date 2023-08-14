@@ -4,6 +4,7 @@ import mongoose from "mongoose"
 
 
 class OrderDetailDto {
+
   @IsNotEmpty({ message: 'Book Name không được để trống!' })
   bookName: mongoose.Schema.Types.ObjectId
 
@@ -18,6 +19,9 @@ class OrderDetailDto {
 }
 
 export class CreateOrderDto {
+  // @IsNotEmpty({ message: 'Email không được để trống!' })
+  // email: string;
+
   @IsNotEmpty({ message: 'Name không được để trống!' })
   name: string;
 
