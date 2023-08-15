@@ -58,6 +58,7 @@ export const postCreateManyUser = (userData) => {
 
 
 export const patchUpdateUser = (id, fullName, email, phone, avatar) => {
+  console.log(">>dâtuopdate", id, fullName, email, phone, avatar)
   return axios.patch(`api/v1/users`, {
     _id: id,
     fullName: fullName,
@@ -153,5 +154,12 @@ export const postUploadAvatar = (fileImg) => {
       "folder_type": "avatar"
     },
   });
+}
 
+export const postChangeUserPassword = (email, oldpassword, newpassword) => {
+  return axios.post(`api/v1/users/password`, {
+    email: email,
+    oldpassword: oldpassword,
+    newpassword: newpassword
+  })
 }

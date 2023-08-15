@@ -16,7 +16,8 @@ const ManageAccount = (props) => {
     {
       key: 'password',
       label: `Đổi mật khẩu`,
-      children: <ChangePassword user={user}
+      children: <ChangePassword
+        user={user}
         setOpenModalManageAccount={props.setOpenModalManageAccount}
       />,
     }

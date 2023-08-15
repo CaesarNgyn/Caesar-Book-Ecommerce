@@ -76,9 +76,10 @@ const ChangeUserInfo = (props) => {
   };
 
   const onFinish = async (values) => {
-    const { id, fullName, email, phone } = values
+    const { _id, fullName, email, phone } = values
     setIsSubmit(true)
-    const res = await patchUpdateUser(id, fullName, email, phone, userAvatar)
+    console.log(">id", _id)
+    const res = await patchUpdateUser(_id, fullName, email, phone, userAvatar)
     if (res && res.data) {
       dispatch(doUpdateUserInfo({ avatar: userAvatar, phone, fullName, email }))
       message.success('Cập nhật thông tin tài khoản thành công');
@@ -97,7 +98,8 @@ const ChangeUserInfo = (props) => {
     const init = {
       email: user.email,
       fullName: user.fullName,
-      phone: user.phone
+      phone: user.phone,
+      _id: user.id
     }
     setInitForm(init);
     form.setFieldsValue(init);
@@ -151,7 +153,6 @@ const ChangeUserInfo = (props) => {
               labelCol={{ span: 24 }} //whole column
               label="ID"
               name="_id"
-
             >
               <Input />
             </Form.Item>

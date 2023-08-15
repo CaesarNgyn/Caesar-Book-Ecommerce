@@ -8,6 +8,7 @@ import * as bcrypt from 'bcrypt';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import aqp from 'api-query-params';
 import { validate } from 'class-validator';
+import { PasswordChangeDto } from './dto/change-password-user.dto';
 @Injectable()
 export class UsersService {
   constructor(@InjectModel(User.name) private userModel: SoftDeleteModel<UserDocument>) { }
@@ -188,5 +189,20 @@ export class UsersService {
     return user
   }
 
+  async changePassword(passwordChangeDto: PasswordChangeDto) {
+    const { email, oldpassword, newpassword } = passwordChangeDto;
+    const user = await this.userModel.findOne({ email })
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    const isValid = await bcrypt.compare(oldpassword, user.password)
+    if (!isValid) {
+      throw new BadRequestException('Mật khẩu cũ không chính xác!')
+    }
+    const newHashedPassword = await bcrypt.hash(newpassword, 10)
+
+    await this.userModel.findOneAndUpdate({ email }, { password: newHashedPassword })
+    return 'Đổi mật khẩu thành công'
+  }
 
 }

@@ -4,6 +4,7 @@ import { CreateUserDto, CreateUserDtoArray } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Public } from 'src/decorators/public.decorator';
 import { ResponseMessage } from 'src/decorators/message.decorator';
+import { PasswordChangeDto } from './dto/change-password-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -48,4 +49,11 @@ export class UsersController {
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
+
+  @Post('/password')
+  @ResponseMessage("User change password")
+  changePassword(@Body() passwordChangeDto: PasswordChangeDto) {
+    return this.usersService.changePassword(passwordChangeDto);
+  }
+
 }
