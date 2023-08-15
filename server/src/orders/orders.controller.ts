@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
@@ -18,8 +18,13 @@ export class OrdersController {
   }
 
   @Get()
-  findAll() {
-    return this.ordersService.findAll();
+  @ResponseMessage("Fetch list orders with pagination")
+  findAll(
+    @Query() queryString: string,
+    @Query("pageSize") limit: string,
+    @Query("current") page: string
+  ) {
+    return this.ordersService.findAll(+limit, +page, queryString);
   }
 
   @Get('/history')
@@ -27,4 +32,9 @@ export class OrdersController {
     return this.ordersService.findHistoryOrders(user)
   }
 
+  @Get(':id')
+  @ResponseMessage("Fetch order by ID")
+  findOne(@Param('id') id: string) {
+    return this.ordersService.findOne(id);
+  }
 }

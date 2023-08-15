@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -8,6 +8,8 @@ import { Book, BookDocument } from 'src/books/schemas/book.schema';
 import { BooksService } from 'src/books/books.service';
 import { UsersService } from 'src/users/users.service';
 import { IUser } from 'src/users/users.interface';
+import aqp from 'api-query-params';
+import mongoose from 'mongoose';
 
 @Injectable()
 export class OrdersService {
@@ -51,9 +53,39 @@ export class OrdersService {
     return `Transaction has been successfully created`
   }
 
-  findAll() {
-    return `This action returns all orders`;
+  async findAll(limit: number, currentPage: number, queryString: string) {
+    const { filter, population } = aqp(queryString)
+    let { sort }: { sort: any } = aqp(queryString)
+    delete filter.current
+    delete filter.pageSize
+    // console.log('>>filter', filter)
+
+    const offset = (currentPage - 1) * limit
+    const defaultLimit = limit ? limit : 3
+
+    const totalItems = (await this.orderModel.find(filter)).length;
+    const totalPages = Math.ceil(totalItems / defaultLimit);
+
+
+    const result = await this.orderModel.find(filter)
+      .skip(offset)
+      .limit(defaultLimit)
+      .sort(sort)
+      .populate(population)
+      .sort(sort)
+
+
+    return {
+      meta: {
+        current: currentPage, //trang hiện tại
+        pageSize: limit, //số lượng bản ghi đã lấy
+        pages: totalPages, //tổng số trang với điều kiện query
+        total: totalItems // tổng số phần tử (số bản ghi)
+      },
+      result //kết quả query
+    };
   }
+
 
   async findHistoryOrders(user: IUser) {
     const userEmail = await this.usersService.findOneByUsername(user.email)
@@ -75,4 +107,17 @@ export class OrdersService {
     return orderHistory;
 
   }
+
+
+  async findOne(id: string) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return 'Order not found'
+    }
+    const order = await this.orderModel.findOne({ _id: id })
+    if (!order) {
+      throw new NotFoundException('Cannot find the order with the relevant ID')
+    }
+    return order
+  }
+
 }

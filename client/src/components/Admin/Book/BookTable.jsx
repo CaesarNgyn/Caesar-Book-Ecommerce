@@ -245,8 +245,8 @@ const BookTable = () => {
           currency: 'VND',
         }).format(book.price),
         deleted: book.isDeleted ? 'true' : 'false',
+        createdAt: moment(book.createdAt).format('DD-MM-YY HH:mm:ss'),
         updatedAt: moment(book.updatedAt).format('DD-MM-YY HH:mm:ss'),
-        updatedAt: moment(book.createdAt).format('DD-MM-YY HH:mm:ss'),
       })
       )
 

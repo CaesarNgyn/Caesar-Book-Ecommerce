@@ -25,6 +25,7 @@ import UserTable from './components/Admin/User/UserTable';
 import BookTable from './components/Admin/Book/BookTable';
 import './styles/cart.scss'
 import HistoryPage from './pages/history/HistoryPage';
+import OrderTable from './components/Admin/Order/OrderTable';
 
 const Layout = () => {
   return (
@@ -77,6 +78,10 @@ const router = createBrowserRouter([
       {
         path: "user",
         element: <UserTable />,
+      },
+      {
+        path: "order",
+        element: <OrderTable />,
       },
     ],
   },

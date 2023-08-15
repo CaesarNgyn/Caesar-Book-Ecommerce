@@ -163,3 +163,11 @@ export const postChangeUserPassword = (email, oldpassword, newpassword) => {
     newpassword: newpassword
   })
 }
+
+export const fetchOrderWithQuery = (query) => {
+  return axios.get(`api/v1/orders?${query}`)
+}
+
+export const fetchOrderByID = (id) => {
+  return axios.get(`api/v1/orders/${id}`)
+}
