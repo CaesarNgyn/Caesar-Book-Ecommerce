@@ -83,4 +83,9 @@ export class BooksService {
     const deleteBookById = await this.bookModel.softDelete({ _id: id })
     return deleteBookById
   }
+
+  async countTotal() {
+    const total = await this.bookModel.countDocuments()
+    return total
+  }
 }

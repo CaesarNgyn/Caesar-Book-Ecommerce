@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaReact } from 'react-icons/fa'
 import { FiShoppingCart } from 'react-icons/fi';
 import { VscSearchFuzzy } from 'react-icons/vsc';
-import { Divider, Badge, Drawer, message, Avatar, Popover } from 'antd';
+import { Divider, Badge, Drawer, message, Avatar, Popover, Empty } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { DownOutlined } from '@ant-design/icons';
 import { Dropdown, Space } from 'antd';
@@ -81,21 +81,31 @@ const Header = () => {
     return (
       <div className='pop-cart-body'>
         <div className='pop-cart-content'>
-          {carts.length > 0 && carts.map((cart, index) => (
-            <div className='book' key={index}>
-              <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${cart.detail.thumbnail}`} />
-              <div>{cart.detail.mainText}</div>
-              <div className='price'>{new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND',
-              }).format(cart.detail.price)}</div>
+          {carts.length > 0 ? (
+            <>
+              {carts.map((cart, index) => (
+                <div className='book' key={index}>
+                  <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${cart.detail.thumbnail}`} alt={cart.detail.mainText} />
+                  <div>{cart.detail.mainText}</div>
+                  <div className='price'>
+                    {new Intl.NumberFormat('vi-VN', {
+                      style: 'currency',
+                      currency: 'VND',
+                    }).format(cart.detail.price)}
+                  </div>
+                </div>
+              ))}
+              <div className='pop-cart-footer'>
+                <button onClick={() => navigate('/order')}>Xem giỏ hàng</button>
+              </div>
+            </>
+          ) : (
+            <div style={{ background: '#fff', padding: '20px 0' }}>
+              <Empty description="Giỏ hàng chưa có sản phẩm nào ^^" />
             </div>
-          ))}
+          )}
         </div>
-        <div className='pop-cart-footer'>
-          <button onClick={() => navigate('/order')}>Xem giỏ hàng</button>
-        </div>
-      </div>
+      </div >
     )
   }
 
@@ -130,7 +140,7 @@ const Header = () => {
                   className='popover-carts'
                   placement='topRight'
                   rootClassName='popover-carts'
-                  title={"Sản phẩm mới thêm"}
+                  title={"Giỏ hàng"}
                   content={contentPopover}
                   arrow={true}
                 >

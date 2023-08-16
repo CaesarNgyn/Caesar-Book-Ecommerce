@@ -9,6 +9,7 @@ import Loader from './Loader';
 import { fetchBookByID } from '../../services/apiServices';
 import { doAddBook } from '../../redux/order/orderSlice';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom'
 const ViewDetail = (props) => {
   const { bookID } = props
   const [isOpenModalGallery, setIsOpenModalGallery] = useState(false);
@@ -18,7 +19,7 @@ const ViewDetail = (props) => {
   const refGallery = useRef(null);
   const [bookImages, setBookImages] = useState([])
   const [currentQuantity, setCurrentQuantity] = useState(1)
-
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const fetchBook = async () => {
     setIsLoading(true)
@@ -82,6 +83,12 @@ const ViewDetail = (props) => {
     message.success('Thêm sản phẩm vào giỏ hàng!');
     dispatch(doAddBook({ quantity: currentQuantity, _id: bookData._id, detail: bookData }))
   }
+
+  const handleBuy = () => {
+    dispatch(doAddBook({ quantity: currentQuantity, _id: bookData._id, detail: bookData }))
+    navigate('/order')
+  }
+
 
 
   useEffect(() => {
@@ -157,7 +164,11 @@ const ViewDetail = (props) => {
                     <BsCartPlus className='icon-cart' />
                     <span>Thêm vào giỏ hàng</span>
                   </button>
-                  <button className='now'>Mua ngay</button>
+                  <button
+                    onClick={() => handleBuy()}
+                    className='now'>
+                    Mua ngay
+                  </button>
                 </div>
               </Col>
             </Col>

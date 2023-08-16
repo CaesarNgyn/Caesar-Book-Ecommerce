@@ -13,4 +13,10 @@ export class DatabaseController {
   findCategories() {
     return this.databaseService.findCategories();
   }
+
+  @Get('dashboard')
+  @ResponseMessage("Fetch dashboard")
+  getDashboard() {
+    return this.databaseService.getDashboard();
+  }
 }

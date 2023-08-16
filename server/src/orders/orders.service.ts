@@ -120,4 +120,20 @@ export class OrdersService {
     return order
   }
 
+  async countTotal() {
+    const total = await this.orderModel.countDocuments()
+    return total
+  }
+
+  async countRevenue() {
+    const ordersWithTotalPrice = await this.orderModel.find({})
+    const results = ordersWithTotalPrice.map(item => {
+      return {
+        money: item.totalPrice,
+        when: item.createdAt
+      }
+    })
+    return results
+  }
+
 }

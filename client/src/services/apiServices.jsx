@@ -171,3 +171,7 @@ export const fetchOrderWithQuery = (query) => {
 export const fetchOrderByID = (id) => {
   return axios.get(`api/v1/orders/${id}`)
 }
+
+export const fetchDashboard = () => {
+  return axios.get(`api/v1/database/dashboard`)
+}

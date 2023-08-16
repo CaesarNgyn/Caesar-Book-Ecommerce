@@ -13,6 +13,7 @@ import { UsersModule } from 'src/users/users.module';
     { name: Order.name, schema: OrderSchema },
   ]), BooksModule, UsersModule],
   controllers: [OrdersController],
-  providers: [OrdersService]
+  providers: [OrdersService],
+  exports: [OrdersService]
 })
 export class OrdersModule { }

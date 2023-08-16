@@ -205,4 +205,9 @@ export class UsersService {
     return 'Đổi mật khẩu thành công'
   }
 
+  async countTotal() {
+    const total = await this.userModel.countDocuments()
+    return total
+  }
+
 }
