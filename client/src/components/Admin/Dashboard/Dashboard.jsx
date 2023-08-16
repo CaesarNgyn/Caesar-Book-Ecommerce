@@ -6,25 +6,34 @@ const Dashboard = (props) => {
   const [revenueData, setRevenueData] = useState([])
   console.log("revenue>>", revenue)
 
-
-  // Map and convert "when" to days
   const getData = () => {
     const mappedData = revenue?.map(item => ({
       day: moment(item.when).format('DD-MM'),
+      money: item.money,
+    }));
+
+    // Sort the mappedData array based on the money field
+    mappedData.sort((a, b) => a.money - b.money);
+
+    // Format money using Intl.NumberFormat
+    const formattedData = mappedData.map(item => ({
+      day: item.day,
       money: new Intl.NumberFormat('vi-VN', {
         style: 'currency',
         currency: 'VND',
       }).format(item.money),
     }));
-    setRevenueData(mappedData);
-  }
+
+    setRevenueData(formattedData);
+  };
+
 
   const data = revenueData?.map(item => {
     return {
       day: item.day, money: item.money
     }
   })
-  console.log(">data", data)
+  // console.log(">data", data)
 
   // const data = [
   //   { day: 8, money: 150000 }

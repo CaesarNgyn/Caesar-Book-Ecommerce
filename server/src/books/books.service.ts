@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -25,6 +25,22 @@ export class BooksService {
     const allBooksID = await this.bookModel.find().select('_id')
 
     return allBooksID.map(book => book._id.toString())
+  }
+
+  async updateAfterSold(id: string, userBought: number) {
+    // Find the book by ID
+    const book = await this.bookModel.findById(id);
+    if (!book) {
+      throw new NotFoundException('Book not found');
+    }
+    // Update the quantity and sold fields
+    book.quantity -= userBought;
+    book.sold += userBought;
+
+    // Save the updated book document
+    await book.save();
+
+    return book;
   }
 
   async findAll(limit: number, currentPage: number, queryString: string) {

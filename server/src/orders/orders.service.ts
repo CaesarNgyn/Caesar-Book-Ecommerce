@@ -9,7 +9,7 @@ import { BooksService } from 'src/books/books.service';
 import { UsersService } from 'src/users/users.service';
 import { IUser } from 'src/users/users.interface';
 import aqp from 'api-query-params';
-import mongoose from 'mongoose';
+import mongoose, { ObjectId } from 'mongoose';
 
 @Injectable()
 export class OrdersService {
@@ -40,6 +40,10 @@ export class OrdersService {
     if (allBooksAvailable === false) {
       throw new BadRequestException('Books trong order không tồn tại')
     }
+    for (const item of detail) {
+      await this.booksService.updateAfterSold(item._id.toString(), item.quantity);
+    }
+
     const createdOrder = await this.orderModel.create(
       {
         email,
