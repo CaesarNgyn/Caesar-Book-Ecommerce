@@ -4,12 +4,12 @@ import { Row, Col, Form, Checkbox, Divider, InputNumber, Button, Rate, Tabs, Pag
 import { fetchBookWithQuery, getCategory } from '../../services/apiServices';
 import { useEffect, useState } from 'react';
 import moment from 'moment';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 const Home = () => {
+  const [searchTerm, setSearchTerm] = useOutletContext();
   const [form] = Form.useForm();
-
   const [listCategory, setListCategory] = useState([])
   const [listBook, setListBook] = useState([])
   const [current, setCurrent] = useState(1)
@@ -35,6 +35,9 @@ const Home = () => {
       query += `&sort=-${sorterField}`
     } else {
       query += `&sort=-sold`
+    }
+    if (searchTerm) {
+      query += `&mainText=/${searchTerm}/i`
     }
     const res = await fetchBookWithQuery(query)
     // console.log(">>check pagination and fiklter", pagination)
@@ -64,7 +67,7 @@ const Home = () => {
 
       setTotal(res.data.meta.total)
       setListBook(listBook)
-      console.log("Check list book", listBook)
+      // console.log("Check list book", listBook)
 
       // console.log(">>data", data)
     }
@@ -74,6 +77,7 @@ const Home = () => {
 
   const handleReset = () => {
     form.resetFields();
+    // setSearchTerm("")
     handleChangeFilter({ category: [] }, { category: [] });
   };
 
@@ -242,7 +246,7 @@ const Home = () => {
   useEffect(() => {
     fetchListBook()
 
-  }, [current, pageSize, filter, sorterField, sorterFilter])
+  }, [current, pageSize, filter, sorterField, sorterFilter, searchTerm])
 
 
 

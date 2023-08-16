@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     AppstoreOutlined,
     ExceptionOutlined,
@@ -17,6 +17,7 @@ import './LayoutAdmin.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { postLogout } from '../../services/apiServices';
 import { doLogout } from '../../redux/account/accountSlice';
+import { doCreateOrder } from '../../redux/order/orderSlice';
 
 
 const { Content, Footer, Sider } = Layout;
@@ -45,7 +46,6 @@ const items = [
         key: 'order',
         icon: <DollarCircleOutlined />
     },
-
 ];
 
 const LayoutAdmin = () => {
@@ -59,6 +59,7 @@ const LayoutAdmin = () => {
     const handleLogout = async () => {
         const res = await postLogout();
         if (res && res.data) {
+            dispatch(doCreateOrder())
             dispatch(doLogout());
             message.success('Đăng xuất thành công');
             navigate('/')
@@ -67,10 +68,10 @@ const LayoutAdmin = () => {
 
 
     const itemsDropdown = [
-        {
-            label: <label style={{ cursor: 'pointer' }}>Quản lý tài khoản</label>,
-            key: 'account',
-        },
+        // {
+        //     label: <label style={{ cursor: 'pointer' }}>Quản lý tài khoản</label>,
+        //     key: 'account',
+        // },
         {
             label: <Link to='/'
                 style={{ cursor: 'pointer' }}
@@ -92,7 +93,17 @@ const LayoutAdmin = () => {
         // console.log(">>", `${baseURL}/images/avatar/${imgUrl}`)
         return `${baseURL}/images/avatar/${imgUrl}`
     }
-
+    useEffect(() => {
+        if (window.location.pathname.includes('/book')) {
+            setActiveMenu('book')
+        } else if (window.location.pathname.includes('/user')) {
+            setActiveMenu('user')
+        } else if (window.location.pathname.includes('/order')) {
+            setActiveMenu('order')
+        } else {
+            setActiveMenu('dashboard')
+        }
+    }, [])
 
     return (
         <Layout
@@ -108,7 +119,7 @@ const LayoutAdmin = () => {
                     Admin
                 </div>
                 <Menu
-                    defaultSelectedKeys={[activeMenu]}
+                    selectedKeys={[activeMenu]}
                     mode="inline"
                     items={items}
                     onClick={(e) => setActiveMenu(e.key)}

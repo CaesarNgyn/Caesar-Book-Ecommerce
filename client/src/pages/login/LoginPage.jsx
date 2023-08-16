@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { postLogin } from '../../services/apiServices';
 import { doLogin } from '../../redux/account/accountSlice';
 import { useSelector, useDispatch } from 'react-redux';
+import { doCreateOrder } from '../../redux/order/orderSlice';
 
 
 const LoginPage = () => {
@@ -24,6 +25,7 @@ const LoginPage = () => {
       message.success('Đăng nhập thành công');
       setIsLoading(false)
       dispatch(doLogin(results.data.user))
+      dispatch(doCreateOrder())
       navigate('/')
     } else {
       notification.error({

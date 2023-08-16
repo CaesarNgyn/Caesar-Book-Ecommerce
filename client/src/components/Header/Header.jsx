@@ -12,10 +12,12 @@ import { postLogout } from '../../services/apiServices';
 import { doLogout } from '../../redux/account/accountSlice';
 import { Link } from 'react-router-dom';
 import ManageAccount from '../User/ManageAccount';
+import { doCreateOrder } from '../../redux/order/orderSlice';
 
 const baseURL = import.meta.env.VITE_BACKEND_URL
 
-const Header = () => {
+const Header = (props) => {
+  const { searchTerm, setSearchTerm } = props
   const [openDrawer, setOpenDrawer] = useState(false);
   const isAuthenticated = useSelector(state => state.account.isAuthenticated);
   const user = useSelector(state => state.account.user);
@@ -23,11 +25,13 @@ const Header = () => {
   const dispatch = useDispatch()
   const [openModalManageAccount, setOpenModalManageAccount] = useState(false)
 
+
   const carts = useSelector(state => state.order.carts)
 
   const handleLogout = async () => {
     const res = await postLogout();
     if (res && res.data) {
+      dispatch(doCreateOrder())
       dispatch(doLogout());
       message.success('Đăng xuất thành công');
       navigate('/')
@@ -74,6 +78,10 @@ const Header = () => {
       >Trang quản trị</Link>,
       key: 'admin',
     })
+  }
+
+  const handleSearchTerm = (value) => {
+    setSearchTerm(value)
   }
 
 
@@ -130,6 +138,7 @@ const Header = () => {
               <input
                 className="input-search" type={'text'}
                 placeholder="Tìm ngay cuốn sách ưa thích (VD: Tinh hoa kinh tế học)"
+                onChange={(e) => handleSearchTerm(e.target.value)}
               />
             </div>
           </div>
@@ -180,8 +189,6 @@ const Header = () => {
       >
         <p>Quản lý tài khoản</p>
         <Divider />
-
-
         <p>Đăng xuất</p>
         <Divider />
       </Drawer>
