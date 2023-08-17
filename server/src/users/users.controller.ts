@@ -5,24 +5,29 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Public } from 'src/decorators/public.decorator';
 import { ResponseMessage } from 'src/decorators/message.decorator';
 import { PasswordChangeDto } from './dto/change-password-user.dto';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from './roles/roles.enum';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
   @Post()
+  @Roles(Role.Admin)
   @ResponseMessage("Create a new user")
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Post('bulk-create')
+  @Roles(Role.Admin)
   @ResponseMessage("Create list users")
   createBulk(@Body() createUserDtos: CreateUserDtoArray) {
     return this.usersService.createBulk(createUserDtos);
   }
 
   @Get()
+  @Roles(Role.Admin)
   @ResponseMessage("Fetch list users with pagination")
   findAll(
     @Query() queryString: string,
@@ -45,6 +50,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @Roles(Role.Admin)
   @ResponseMessage("Delete a user")
   remove(@Param('id') id: string) {
     return this.usersService.remove(id);

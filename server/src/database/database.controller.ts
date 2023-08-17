@@ -2,6 +2,8 @@ import { Controller, Get, Param } from '@nestjs/common';
 import { DatabaseService } from './database.service';
 import { ResponseMessage } from 'src/decorators/message.decorator';
 import { Public } from 'src/decorators/public.decorator';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from 'src/users/roles/roles.enum';
 
 @Controller('database')
 export class DatabaseController {
@@ -15,6 +17,7 @@ export class DatabaseController {
   }
 
   @Get('dashboard')
+  @Roles(Role.Admin)
   @ResponseMessage("Fetch dashboard")
   getDashboard() {
     return this.databaseService.getDashboard();

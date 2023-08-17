@@ -7,6 +7,8 @@ import { TransformInterceptor } from './core/transform.interceptor';
 import cookieParser from 'cookie-parser';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import { RolesGuard } from './users/roles/roles.guard';
+import { ForbiddenExceptionFilter } from './core/forbidden-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(
@@ -45,8 +47,12 @@ async function bootstrap() {
   const reflector = app.get(Reflector)
   app.useGlobalGuards(new JwtAuthGuard(reflector))
 
+  //Enable role based guard
+  app.useGlobalGuards(new RolesGuard(reflector))
+
   //use transform interceptor globally
   app.useGlobalInterceptors(new TransformInterceptor(reflector));
+  app.useGlobalFilters(new ForbiddenExceptionFilter());
 
   //use versioning to have different versions of controllers or individual routes running within the same application
   app.setGlobalPrefix('api')
