@@ -10,13 +10,15 @@ import { UsersService } from 'src/users/users.service';
 import { IUser } from 'src/users/users.interface';
 import aqp from 'api-query-params';
 import mongoose, { ObjectId } from 'mongoose';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class OrdersService {
   constructor(
     @InjectModel(Order.name) private orderModel: SoftDeleteModel<OrderDocument>,
     private readonly booksService: BooksService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    private readonly mailService: MailService
   ) { }
 
   async create(createOrderDto: CreateOrderDto, user: IUser) {
@@ -53,6 +55,8 @@ export class OrdersService {
         totalPrice,
         detail
       })
+    //send mail after creating order
+    await this.mailService.handleSendEmail(email)
     // return createdOrder
     return `Transaction has been successfully created`
   }

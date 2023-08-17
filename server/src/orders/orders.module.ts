@@ -7,11 +7,12 @@ import { Book, BookSchema } from 'src/books/schemas/book.schema';
 import { BooksService } from 'src/books/books.service';
 import { BooksModule } from 'src/books/books.module';
 import { UsersModule } from 'src/users/users.module';
+import { MailModule } from 'src/mail/mail.module';
 
 @Module({
   imports: [MongooseModule.forFeature([
     { name: Order.name, schema: OrderSchema },
-  ]), BooksModule, UsersModule],
+  ]), BooksModule, UsersModule, MailModule],
   controllers: [OrdersController],
   providers: [OrdersService],
   exports: [OrdersService]

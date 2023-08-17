@@ -12,6 +12,7 @@ import { FileModule } from './file/file.module';
 import { BooksModule } from './books/books.module';
 import { DatabaseModule } from './database/database.module';
 import { OrdersModule } from './orders/orders.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -34,7 +35,8 @@ import { OrdersModule } from './orders/orders.module';
     FileModule,
     BooksModule,
     DatabaseModule,
-    OrdersModule],
+    OrdersModule,
+    MailModule],
   controllers: [AppController],
   providers: [AppService, ConfigService]
 
