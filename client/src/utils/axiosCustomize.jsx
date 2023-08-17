@@ -17,6 +17,9 @@ customAxios.defaults.headers.common = { 'Authorization': `Bearer ${localStorage.
 // Add interceptors for request and response (optional)
 customAxios.interceptors.request.use(
   (config) => {
+    if (typeof window !== "undefined" && window && window.localStorage && window.localStorage.getItem('access_token')) {
+      config.headers.Authorization = 'Bearer ' + window.localStorage.getItem('access_token')
+    }
     // Modify the request config before it is sent
     // console.log('Request is being sent:', config);
     return config;

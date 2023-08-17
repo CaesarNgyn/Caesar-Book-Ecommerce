@@ -25,7 +25,6 @@ const LoginPage = () => {
       message.success('Đăng nhập thành công');
       setIsLoading(false)
       dispatch(doLogin(results.data.user))
-      dispatch(doCreateOrder())
       navigate('/')
     } else {
       notification.error({

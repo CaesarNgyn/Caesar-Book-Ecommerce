@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   isAuthenticated: false,
   isLoading: true,
+  isLoggedIn: false,
   user: {
     email: "",
     phone: "",
@@ -14,6 +15,8 @@ const initialState = {
   },
 };
 
+
+
 const accountSlice = createSlice({
   name: 'account',
   initialState,
@@ -21,7 +24,8 @@ const accountSlice = createSlice({
     doLogin: (state, action) => {
       state.isAuthenticated = true,
         state.user = action.payload,
-        state.isLoading = false
+        state.isLoading = false,
+        state.isLoggedIn = true
     },
     doGetAccount: (state, action) => {
       state.isAuthenticated = true,
@@ -31,14 +35,15 @@ const accountSlice = createSlice({
     doLogout: (state, action) => {
       localStorage.removeItem('access_token')
       state.isAuthenticated = false,
-        state.user = {
-          email: "",
-          phone: "",
-          fullName: "",
-          role: "",
-          avatar: "",
-          id: ""
-        }
+        state.isLoggedIn = false
+      state.user = {
+        email: "",
+        phone: "",
+        fullName: "",
+        role: "",
+        avatar: "",
+        id: ""
+      }
     },
     doUploadAvatar: (state, action) => {
       state.user.tempAvatar = action.payload.avatar

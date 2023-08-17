@@ -109,19 +109,22 @@ const router = createBrowserRouter([
 export default function App() {
   const dispatch = useDispatch()
   const isLoading = useSelector(state => state.account.isLoading)
+  const isLoggedIn = useSelector(state => state.account.isLoggedIn)
 
   const getAccountInformation = async () => {
     try {
+      if (isLoggedIn) {
+        const response = await fetchAccount()
+        if (response && response.data && response.data?.user) {
+          dispatch(doGetAccount(response.data.user))
+        }
+      }
       if (window.location.pathname === '/login' ||
         window.location.pathname === '/register' ||
         window.location.pathname === '/'
         || window.location.pathname.startsWith('/book/')
       ) {
         return;
-      }
-      const response = await fetchAccount()
-      if (response && response.data && response.data?.user) {
-        dispatch(doGetAccount(response.data.user))
       }
 
     } catch (error) {

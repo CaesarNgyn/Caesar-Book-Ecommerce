@@ -13,7 +13,7 @@ const Dashboard = (props) => {
     }));
 
     // Sort the mappedData array based on the money field
-    mappedData.sort((a, b) => a.money - b.money);
+    mappedData.sort((a, b) => a.day.localeCompare(b.day));
 
     // Format money using Intl.NumberFormat
     const formattedData = mappedData.map(item => ({

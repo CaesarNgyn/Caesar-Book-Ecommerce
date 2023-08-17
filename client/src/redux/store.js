@@ -14,15 +14,29 @@ import {
 } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-const persistConfig = {
+const rootPersistConfig = {
   key: 'root',
   version: 1,
   storage,
-  blacklist: ['account'] //account reducer wont be persisted
+  blacklist: ['account'], //account reducer wont be persisted
+  // whitelist: ['isLoggedIn']
 }
-const rootReducer = combineReducers({ account: accountReducer, order: orderReducer })
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+//nested persist
+const accountPersisConfig = {
+  key: 'account',
+  version: 1,
+  storage,
+  whitelist: ['isLoggedIn']
+}
+
+
+const rootReducer = combineReducers({
+  account: persistReducer(accountPersisConfig, accountReducer),
+  order: orderReducer
+})
+
+const persistedReducer = persistReducer(rootPersistConfig, rootReducer);
 
 const store = configureStore({
   reducer: persistedReducer,
