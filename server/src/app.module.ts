@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -13,10 +13,21 @@ import { BooksModule } from './books/books.module';
 import { DatabaseModule } from './database/database.module';
 import { OrdersModule } from './orders/orders.module';
 import { MailModule } from './mail/mail.module';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerGuard } from '@nestjs/throttler';
+import { HealthModule } from './health/health.module';
+import { UsersController } from './users/users.controller';
+import { HealthController } from './health/health.controller';
+import { TerminusModule } from '@nestjs/terminus';
+
 
 @Module({
   imports: [ConfigModule.forRoot({
     isGlobal: true
+  }),
+  ThrottlerModule.forRoot({
+    ttl: 60,
+    limit: 20,
   }),
   MongooseModule.forRootAsync({
     imports: [ConfigModule],
@@ -36,9 +47,19 @@ import { MailModule } from './mail/mail.module';
     BooksModule,
     DatabaseModule,
     OrdersModule,
-    MailModule],
+    MailModule,
+    TerminusModule,
+    HealthModule],
   controllers: [AppController],
-  providers: [AppService, ConfigService]
+  providers: [AppService,
+    ConfigService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ]
 
 })
+
 export class AppModule { }
+
