@@ -19,6 +19,8 @@ import { HealthModule } from './health/health.module';
 import { UsersController } from './users/users.controller';
 import { HealthController } from './health/health.controller';
 import { TerminusModule } from '@nestjs/terminus';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { CloudinaryService } from './cloudinary/cloudinary.service';
 
 
 @Module({
@@ -49,7 +51,8 @@ import { TerminusModule } from '@nestjs/terminus';
     OrdersModule,
     MailModule,
     TerminusModule,
-    HealthModule],
+    HealthModule,
+    CloudinaryModule],
   controllers: [AppController],
   providers: [AppService,
     ConfigService,
@@ -57,6 +60,7 @@ import { TerminusModule } from '@nestjs/terminus';
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
+    CloudinaryService,
   ]
 
 })

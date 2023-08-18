@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { MulterModuleOptions, MulterOptionsFactory } from '@nestjs/platform-express'
 import fs from 'fs'
-import { diskStorage } from "multer";
+import multer, { diskStorage } from "multer";
 import path, { join } from "path";
 
 @Injectable()
@@ -36,6 +36,8 @@ export class MulterConfigService implements MulterOptionsFactory {
   }
 
   createMulterOptions(): MulterModuleOptions {
+    // const storage = multer.memoryStorage()
+
     return {
       //storage is for configure multer in order to know where files should be saved
       storage: diskStorage({
