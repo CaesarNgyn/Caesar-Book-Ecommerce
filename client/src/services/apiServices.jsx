@@ -175,3 +175,26 @@ export const fetchOrderByID = (id) => {
 export const fetchDashboard = () => {
   return axios.get(`api/v1/database/dashboard`)
 }
+
+
+export const postCreateOrderPaypal = (bodyData) => {
+  return axios({
+    method: 'post',
+    url: '/api/v1/paypal/create-order',
+    data: bodyData,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+}
+
+export const postCaptureOrderPaypal = (orderID) => {
+  return axios({
+    method: 'post',
+    url: '/api/v1/paypal/capture-order',
+    data: { orderID },
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+}

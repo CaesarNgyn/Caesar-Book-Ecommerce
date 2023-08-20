@@ -21,6 +21,7 @@ import { HealthController } from './health/health.controller';
 import { TerminusModule } from '@nestjs/terminus';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { CloudinaryService } from './cloudinary/cloudinary.service';
+import { PaypalModule } from './paypal/paypal.module';
 
 
 @Module({
@@ -52,7 +53,8 @@ import { CloudinaryService } from './cloudinary/cloudinary.service';
     MailModule,
     TerminusModule,
     HealthModule,
-    CloudinaryModule],
+    CloudinaryModule,
+    PaypalModule],
   controllers: [AppController],
   providers: [AppService,
     ConfigService,
