@@ -2,7 +2,8 @@ import { PayPalButtons } from '@paypal/react-paypal-js';
 import { postCaptureOrderPaypal, postCreateOrderPaypal } from '../../services/apiServices';
 const baseURL = import.meta.env.VITE_BACKEND_URL
 
-const PayPalPayment = () => {
+const PayPalPayment = (props) => {
+  const { setCurrentStep } = props
   // const createOrder = async (data, actions) => {
   //   try {
   //     const response = await fetch(`${baseURL}api/v1/paypal/create-order`, {
@@ -52,6 +53,7 @@ const PayPalPayment = () => {
       const response = await postCaptureOrderPaypal(orderID);
       console.log("ordeeriD>", orderID)
       const responseData = await response.data
+      setCurrentStep(2)
       return responseData
     } catch {
       console.error("Error creating PayPal order:", error);

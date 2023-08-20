@@ -11,6 +11,7 @@ import PayPalPayment from './PayPalPayment';
 
 
 const Payment = (props) => {
+  const { setCurrentStep } = props
   const carts = useSelector(state => state.order.carts)
   const [totalPrice, setTotalPrice] = useState(0)
   const dispatch = useDispatch()
@@ -52,7 +53,7 @@ const Payment = (props) => {
     if (results && results.data) {
       message.success('Đặt hàng thành công');
       dispatch(doCreateOrder())
-      props.setCurrentStep(2)
+      setCurrentStep(2)
     } else {
       notification.error({
         message: 'Có lỗi xảy ra',
@@ -209,7 +210,7 @@ const Payment = (props) => {
                   Đặt Hàng {`(${carts.length})`}
                 </button>}
               {selectedPaymentMethod === 'electronicWallet' &&
-                <PayPalPayment />
+                <PayPalPayment setCurrentStep={setCurrentStep} />
               }
             </div>
           </Col>

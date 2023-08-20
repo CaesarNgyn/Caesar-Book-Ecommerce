@@ -18,10 +18,11 @@ const Dashboard = (props) => {
     // Format money using Intl.NumberFormat
     const formattedData = mappedData.map(item => ({
       day: item.day,
-      money: new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND',
-      }).format(item.money),
+      // money: new Intl.NumberFormat('vi-VN', {
+      //   style: 'currency',
+      //   currency: 'VND',
+      // }).format(item.money),
+      money: item.money
     }));
 
     setRevenueData(formattedData);
