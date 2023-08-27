@@ -26,9 +26,21 @@ export default class PayPalAPI {
             amount: {
               currency_code: 'USD',
               value: data.product.price
+            },
+            "shipping": {
+              "address": {
+                "address_line_1": data.product.address,
+                "address_line_2": "Floor 1",
+                "admin_area_2": "Viet Nam",
+                "admin_area_1": "VN",
+                "postal_code": "301200",
+                "country_code": "VN"
+              }
             }
-          }
-        ]
+          },
+        ],
+
+
       }),
     });
 

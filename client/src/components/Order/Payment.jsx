@@ -22,7 +22,7 @@ const Payment = (props) => {
   const [address, setAddress] = useState('');
 
 
-  console.log("sellected", selectedPaymentMethod)
+  // console.log("sellected", selectedPaymentMethod)
   const handlePaymentMethodChange = (e) => {
     setSelectedPaymentMethod(e.target.value);
   };

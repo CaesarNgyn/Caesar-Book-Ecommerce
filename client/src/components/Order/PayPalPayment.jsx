@@ -9,7 +9,7 @@ const PayPalPayment = (props) => {
     try {
       const bodyData = {
         product: {
-          description: 'Wood Candy Sofa',
+          address: 'Ha Noi',
           price: '2.00',
         },
       };
@@ -30,6 +30,7 @@ const PayPalPayment = (props) => {
       const response = await postCaptureOrderPaypal(orderID);
       console.log("ordeeriD>", orderID)
       const responseData = await response.data
+
       setCurrentStep(2)
       return responseData
     } catch {
