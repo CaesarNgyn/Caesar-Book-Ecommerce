@@ -51,8 +51,10 @@ const ChangeUserInfo = (props) => {
     const res = await postUploadAvatar(file);
     console.log(">>res upload file", res)
     if (res && res.data) {
-      const newAvatar = res.data.fileName;
-      dispatch(doUploadAvatar({ avatar: newAvatar }))
+      const newAvatar = res.data.file;
+      console.log("res data", res.data)
+      dispatch(doUploadAvatar({ newAvatar }))
+      console.log("newAvatar", newAvatar)
       setUserAvatar(newAvatar)
       onSuccess('ok')
     } else {

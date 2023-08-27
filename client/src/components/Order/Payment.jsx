@@ -19,10 +19,16 @@ const Payment = (props) => {
   const [form] = Form.useForm();
   const [isSubmit, setIsSubmit] = useState(false)
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('cashOnDelivery');
+  const [address, setAddress] = useState('');
+
 
   console.log("sellected", selectedPaymentMethod)
   const handlePaymentMethodChange = (e) => {
     setSelectedPaymentMethod(e.target.value);
+  };
+
+  const handleAddressChange = (e) => {
+    setAddress(e.target.value);
   };
 
   const handleChangeQuantity = (value, currentCart) => {
@@ -175,7 +181,10 @@ const Payment = (props) => {
                 >
                   <TextArea
                     autoFocus
-                    rows={4} />
+                    rows={4}
+                    onChange={handleAddressChange}
+                    value={address}
+                  />
                 </Form.Item>
 
 
@@ -183,10 +192,20 @@ const Payment = (props) => {
               <div className='info'>
                 <div className='method'>
                   <div> Hình thức thanh toán</div>
-                  <Radio.Group onChange={handlePaymentMethodChange} value={selectedPaymentMethod}>
-                    <Radio value="cashOnDelivery">Thanh toán khi nhận hàng</Radio>
+                  <Radio.Group
+                    onChange={handlePaymentMethodChange}
+                    value={selectedPaymentMethod}>
+                    <Radio
+                      value="cashOnDelivery"
+                      disabled={!address}>
+                      Thanh toán khi nhận hàng
+                    </Radio>
                     <br />
-                    <Radio value="electronicWallet" style={{ marginTop: '8px' }}>
+                    <Radio
+                      value="electronicWallet"
+                      style={{ marginTop: '8px' }}
+                      disabled={!address}
+                    >
                       Thanh toán bằng ví điện tử
                     </Radio>
                   </Radio.Group>
@@ -201,7 +220,7 @@ const Payment = (props) => {
                     currency: 'VND',
                   }).format(totalPrice)}</span>
               </div>
-              {selectedPaymentMethod === 'cashOnDelivery' &&
+              {address && selectedPaymentMethod === 'cashOnDelivery' &&
                 <button
                   onClick={() => form.submit()}
                 // disabled={isSubmit}
@@ -209,7 +228,7 @@ const Payment = (props) => {
                   {isSubmit && <span><LoadingOutlined /> &nbsp;</span>}
                   Đặt Hàng {`(${carts.length})`}
                 </button>}
-              {selectedPaymentMethod === 'electronicWallet' &&
+              {address && selectedPaymentMethod === 'electronicWallet' &&
                 <PayPalPayment setCurrentStep={setCurrentStep} />
               }
             </div>
