@@ -5,7 +5,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ResponseMessage } from 'src/decorators/message.decorator';
 import * as fs from 'fs';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('file')
 @Controller('file')
 export class FileController {
   constructor(

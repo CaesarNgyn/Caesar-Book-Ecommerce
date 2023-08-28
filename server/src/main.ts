@@ -10,6 +10,7 @@ import { join } from 'path';
 import { RolesGuard } from './users/roles/roles.guard';
 import { ForbiddenExceptionFilter } from './core/forbidden-exception.filter';
 import helmet from 'helmet';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(
@@ -40,10 +41,6 @@ async function bootstrap() {
   //http://localhost:6969/images/resume/fluffboi.jpg accessing without /public
   app.useStaticAssets(join(__dirname, '..', 'public'));
 
-
-
-
-
   //Enable JWT guard for all routes
   const reflector = app.get(Reflector)
   app.useGlobalGuards(new JwtAuthGuard(reflector))
@@ -67,6 +64,29 @@ async function bootstrap() {
 
   //The helmet middleware adds several security-related HTTP headers to the responses sent by application.
   app.use(helmet())
+
+  //set up swagger
+  const config = new DocumentBuilder()
+    .setTitle('Caesar Martin Book Ecommerce APIs Document')
+    .setDescription('All Modules APIs')
+    .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'Bearer',
+        bearerFormat: 'JWT',
+        in: 'header',
+      },
+      'token',
+    )
+    .addSecurityRequirements('token')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('swagger', app, document, {
+    swaggerOptions: {
+      persistAuthorization: true,
+    }
+  },);
 
   await app.listen(port);
 }

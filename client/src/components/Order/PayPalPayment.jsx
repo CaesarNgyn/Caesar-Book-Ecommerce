@@ -1,5 +1,6 @@
 import { PayPalButtons } from '@paypal/react-paypal-js';
 import { postCaptureOrderPaypal, postCreateOrderPaypal } from '../../services/apiServices';
+import { doCreateOrder } from '../../redux/order/orderSlice';
 const baseURL = import.meta.env.VITE_BACKEND_URL
 
 const PayPalPayment = (props) => {
@@ -30,7 +31,7 @@ const PayPalPayment = (props) => {
       const response = await postCaptureOrderPaypal(orderID);
       console.log("ordeeriD>", orderID)
       const responseData = await response.data
-
+      dispatch(doCreateOrder())
       setCurrentStep(2)
       return responseData
     } catch {

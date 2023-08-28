@@ -3,7 +3,9 @@ import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import PayPalAPI from './paypal.api';
 import { Public } from 'src/decorators/public.decorator';
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('paypal')
 @Controller('paypal')
 export class PaypalController {
   private paypalAPI: PayPalAPI;

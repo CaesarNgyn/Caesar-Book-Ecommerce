@@ -6,7 +6,9 @@ import { ResponseMessage } from 'src/decorators/message.decorator';
 import { Public } from 'src/decorators/public.decorator';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from 'src/users/roles/roles.enum';
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('books')
 @Controller('books')
 export class BooksController {
   constructor(private readonly booksService: BooksService) { }

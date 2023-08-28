@@ -7,7 +7,9 @@ import { ResponseMessage } from 'src/decorators/message.decorator';
 import { PasswordChangeDto } from './dto/change-password-user.dto';
 import { Roles } from 'src/decorators/roles.decorator';
 import { Role } from './roles/roles.enum';
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }

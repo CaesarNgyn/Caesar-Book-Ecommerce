@@ -3,7 +3,9 @@ import { MailService } from './mail.service';
 import { Public } from 'src/decorators/public.decorator';
 import { ResponseMessage } from 'src/decorators/message.decorator';
 import { MailerService } from '@nestjs-modules/mailer';
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags('mail')
 @Controller('mail')
 export class MailController {
   constructor(
