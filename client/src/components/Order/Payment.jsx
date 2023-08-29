@@ -20,6 +20,8 @@ const Payment = (props) => {
   const [isSubmit, setIsSubmit] = useState(false)
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('cashOnDelivery');
   const [address, setAddress] = useState('');
+  const [fullName, setFullName] = useState(currentUser.fullName)
+  const [phone, setPhone] = useState(currentUser.phone)
 
 
   // console.log("sellected", selectedPaymentMethod)
@@ -29,6 +31,14 @@ const Payment = (props) => {
 
   const handleAddressChange = (e) => {
     setAddress(e.target.value);
+  };
+
+  const handleFullNameChange = (e) => {
+    setFullName(e.target.value);
+  };
+
+  const handlePhoneChange = (e) => {
+    setPhone(e.target.value);
   };
 
   const handleChangeQuantity = (value, currentCart) => {
@@ -151,7 +161,7 @@ const Payment = (props) => {
                   name="fullName"
                   rules={[{ required: true, message: 'Tên người nhận không được để trống!' }]}
                 >
-                  <Input />
+                  <Input onChange={handleFullNameChange} />
                 </Form.Item>
 
 
@@ -169,7 +179,7 @@ const Payment = (props) => {
                     message: 'Số điện thoại phải có ít nhất 10 chữ số!',
                   },]}
                 >
-                  <Input />
+                  <Input onChange={handlePhoneChange} />
                 </Form.Item>
 
 
@@ -229,7 +239,13 @@ const Payment = (props) => {
                   Đặt Hàng {`(${carts.length})`}
                 </button>}
               {address && selectedPaymentMethod === 'electronicWallet' &&
-                <PayPalPayment setCurrentStep={setCurrentStep} />
+                <PayPalPayment
+                  setCurrentStep={setCurrentStep}
+                  phone={phone}
+                  address={address}
+                  fullName={fullName}
+                  totalPrice={totalPrice}
+                />
               }
             </div>
           </Col>
