@@ -30,7 +30,7 @@ import { PaypalModule } from './paypal/paypal.module';
   }),
   ThrottlerModule.forRoot({
     ttl: 60,
-    limit: 20,
+    limit: 100,
   }),
   MongooseModule.forRootAsync({
     imports: [ConfigModule],

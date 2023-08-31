@@ -81,15 +81,21 @@ const router = createBrowserRouter([
       },
       {
         path: "book",
-        element: <BookTable />,
+        element: <ProtectedRoute>
+          <BookTable />
+        </ProtectedRoute>,
       },
       {
         path: "user",
-        element: <UserTable />,
+        element: <ProtectedRoute>
+          <UserTable />
+        </ProtectedRoute>,
       },
       {
         path: "order",
-        element: <OrderTable />,
+        element: <ProtectedRoute>
+          <OrderTable />
+        </ProtectedRoute>,
       },
     ],
   },
