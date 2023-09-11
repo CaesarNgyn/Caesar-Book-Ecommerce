@@ -14,7 +14,7 @@ change '.env.sample' to '.env' and fill in neccessary parts
 
 ```terminal
 $ cd client          // go to client folder
-$ yarn # or npm i    // npm install packages
+$ yarn # or npm install --legacy-peer-deps   // npm install packages
 $ npm run dev        // run it locally
 ```
 
