@@ -18,7 +18,7 @@ async function bootstrap() {
   );
 
   const configService = app.get(ConfigService)
-  const port = configService.get<string>('PORT')
+  const port = configService.get<string>('PORT') || 6969
 
   //applies the validation pipe to all routes and controllers, including third-party libraries and external endpoints.
   app.useGlobalPipes(new ValidationPipe());
