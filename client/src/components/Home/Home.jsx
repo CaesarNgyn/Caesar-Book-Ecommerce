@@ -61,7 +61,7 @@ const Home = () => {
         thumbnail: book.thumbnail,
         slider: book.slider,
         updatedAt: moment(book.updatedAt).format('DD-MM-YY HH:mm:ss'),
-        updatedAt: moment(book.createdAt).format('DD-MM-YY HH:mm:ss'),
+        createdAt: moment(book.createdAt).format('DD-MM-YY HH:mm:ss'),
       })
       )
 
