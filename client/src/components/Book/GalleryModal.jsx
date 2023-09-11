@@ -1,7 +1,7 @@
 import { Col, Image, Modal, Row } from "antd";
 import { useEffect, useRef, useState } from "react";
 import ImageGallery from 'react-image-gallery';
-import './book.scss';
+import './Book.scss';
 
 const GalleryModal = (props) => {
   const { isOpen, setIsOpen, currentIndex, items, title } = props;

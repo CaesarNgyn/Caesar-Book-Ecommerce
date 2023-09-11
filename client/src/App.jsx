@@ -20,10 +20,10 @@ import AdminPage from './pages/admin/AdminPage';
 import OrderPage from './pages/order/OrderPage';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import LayoutAdmin from './components/Admin/LayoutAdmin';
-import './styles/Reset.scss';
 import UserTable from './components/Admin/User/UserTable';
 import BookTable from './components/Admin/Book/BookTable';
 import './styles/cart.scss'
+import './styles/reset.scss'
 import HistoryPage from './pages/history/HistoryPage';
 import OrderTable from './components/Admin/Order/OrderTable';
 
